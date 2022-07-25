@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.22)
+project(project_euler_cpp)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_subdirectory(pe-lib)
+
+file(GLOB subdirs ${CMAKE_CURRENT_SOURCE_DIR}/pe-solutions/*)
+foreach(subdir ${subdirs})
+    if(IS_DIRECTORY ${subdir})
+        cmake_path(GET subdir STEM batch_name)
+        file(GLOB files ${subdir}/*)
+        foreach(file ${files})
+            cmake_path(GET file STEM test_name)
+            cmake_path(GET file FILENAME file_name)
+            string(CONCAT exe_name ${test_name} "-test")
+            string(CONCAT exe_src "pe-solutions/" ${batch_name} "/" ${file_name})
+            add_executable(${exe_name} ${exe_src} doctest/main.cpp)
+            target_link_libraries(${exe_name} pe-lib)
+            target_include_directories(${exe_name} PRIVATE ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/pe-lib)
+        endforeach()
+    endif()
+endforeach()
