@@ -1,9 +1,11 @@
 set(SOURCE_FILES
         pe-maths/gauss-sum.cpp
+        pe-maths/prime-factors.cpp
         )
 
 set(HEADER_FILES
         pe-maths/gauss-sum.h
+        pe-maths/prime-factors.h
         )
 
 add_library(pe-lib ${SOURCE_FILES} ${HEADER_FILES})

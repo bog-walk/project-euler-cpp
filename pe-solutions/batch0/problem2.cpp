@@ -84,7 +84,7 @@ TEST_CASE("test mid constraints") {
     std::vector<unsigned long long> expected {188, 798};
 
     for (int i {0}; i < nValues.size(); i++) {
-        CHECK_EQ(expected[i],sumOfEvenFibsNaive(nValues[i]));
+        CHECK_EQ(expected[i], sumOfEvenFibsNaive(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsBrute(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsFormula(nValues[i]));
     }
@@ -95,7 +95,7 @@ TEST_CASE("test when N is even fibonacci") {
     std::vector<unsigned long long> expected {10, 3382};
 
     for (int i {0}; i < nValues.size(); i++) {
-        CHECK_EQ(expected[i],sumOfEvenFibsNaive(nValues[i]));
+        CHECK_EQ(expected[i], sumOfEvenFibsNaive(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsBrute(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsFormula(nValues[i]));
     }
@@ -119,7 +119,7 @@ TEST_CASE("test upper constraints") {
                                               49'597'426'547'377'748};
 
     for (int i {0}; i < nValues.size(); i++) {
-        CHECK_EQ(expected[i],sumOfEvenFibsNaive(nValues[i]));
+        CHECK_EQ(expected[i], sumOfEvenFibsNaive(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsBrute(nValues[i]));
         CHECK_EQ(expected[i], sumOfEvenFibsFormula(nValues[i]));
     }
