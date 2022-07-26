@@ -12,6 +12,7 @@
  *       multiples of K1 || K2 < N = {3, 5, 6, 9}
  *       sum = 23
  */
+
 #include "../../doctest/doctest.h"
 #include <algorithm>
 #include <numeric>
