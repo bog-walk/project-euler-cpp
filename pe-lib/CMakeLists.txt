@@ -1,12 +1,14 @@
 set(SOURCE_FILES
         pe-maths/gauss-sum.cpp
         pe-maths/prime-factors.cpp
+        pe-maths/primes.cpp
         pe-strings/palindrome.cpp
         )
 
 set(HEADER_FILES
         pe-maths/gauss-sum.h
         pe-maths/prime-factors.h
+        pe-maths/primes.h
         pe-strings/palindrome.h
         )
 
