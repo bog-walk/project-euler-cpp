@@ -9,7 +9,7 @@
  * Search Factorisation algorithm without any optimisation.
  *
  * @return map of prime factors (keys) and their exponents (values).
- * @throws IllegalArgumentException if [n] <= 1.
+ * @throws std::invalid_argument if [n] <= 1.
  */
 std::map<unsigned long long, unsigned long> primeFactors(unsigned long long n)
 {

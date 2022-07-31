@@ -25,7 +25,7 @@ unsigned long long sumSquareDiffBrute(unsigned short n)
     // start range at 2, as 1 will be used as the accumulator's initial value
     std::vector<unsigned short> range(n - 1);
     std::iota(range.begin(), range.end(), 2);
-    std::pair<unsigned long long, unsigned long long> sums = std::accumulate(
+    auto [ sumOfRange, sumOfSquares ] = std::accumulate(
             range.cbegin(),
             range.cend(),
             std::pair<unsigned long long, unsigned long long>(1, 1),
@@ -35,7 +35,7 @@ unsigned long long sumSquareDiffBrute(unsigned short n)
                     ) {
                 return std::pair(acc.first + num, acc.second + num * num);
             });
-    return sums.first * sums.first - sums.second;
+    return sumOfRange * sumOfRange - sumOfSquares;
 }
 
 // The sum of the 1st [n] natural numbers (triangular numbers) is found using

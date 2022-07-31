@@ -3,6 +3,7 @@ set(SOURCE_FILES
         pe-maths/is-prime.cpp
         pe-maths/prime-factors.cpp
         pe-maths/primes.cpp
+        pe-maths/pythagorean.cpp
         pe-strings/palindrome.cpp
         pe-tests/get-test-resource.cpp
         )
@@ -12,6 +13,7 @@ set(HEADER_FILES
         pe-maths/is-prime.h
         pe-maths/prime-factors.h
         pe-maths/primes.h
+        pe-maths/pythagorean.cpp
         pe-strings/palindrome.h
         pe-tests/get-test-resource.h
         )
