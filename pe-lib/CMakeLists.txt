@@ -4,6 +4,7 @@ set(SOURCE_FILES
         pe-maths/prime-factors.cpp
         pe-maths/primes.cpp
         pe-strings/palindrome.cpp
+        pe-tests/get-test-resource.cpp
         )
 
 set(HEADER_FILES
@@ -12,6 +13,7 @@ set(HEADER_FILES
         pe-maths/prime-factors.h
         pe-maths/primes.h
         pe-strings/palindrome.h
+        pe-tests/get-test-resource.h
         )
 
 add_library(pe-lib ${SOURCE_FILES} ${HEADER_FILES})
