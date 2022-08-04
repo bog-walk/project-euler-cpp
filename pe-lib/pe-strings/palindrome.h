@@ -1,16 +1,16 @@
 #ifndef PROJECT_EULER_CPP_PALINDROME_H
 #define PROJECT_EULER_CPP_PALINDROME_H
 
-#endif //PROJECT_EULER_CPP_PALINDROME_H
+#include <string_view>
 
-#include <string>
+bool isPalindromeBuiltIn(std::string_view s);
 
-bool isPalindromeBuiltIn(const std::string& s);
+bool isPalindromeConstructor(std::string_view s);
 
-bool isPalindromeConstructor(const std::string& s);
+bool isPalindromeRecursive(std::string_view s);
 
-bool isPalindromeRecursive(std::string s);
-
-bool isPalindrome(std::string s);
+bool isPalindrome(std::string_view s);
 
 bool isPalindromeNumber(unsigned long long n);
+
+#endif //PROJECT_EULER_CPP_PALINDROME_H

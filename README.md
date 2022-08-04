@@ -1,8 +1,10 @@
 # Project Euler __ C++
 
-A C++ solution set for the first 100 problems corresponding to the [Project Euler](https://projecteuler.net/archives) challenges.
+A C++ solution set for the first 100 problems corresponding to the [Project Euler](https://projecteuler.net/archives) 
+challenges.
 
-0/100 solved: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle:
+10/100 solved: :zap: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: :black_circle: 
+:black_circle: :black_circle: :black_circle:
 
 Problem content on the Project Euler site is licensed under [CC BY-NC-SA 4.0](https://projecteuler.net/copyright).
 
