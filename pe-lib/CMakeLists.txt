@@ -1,4 +1,5 @@
 set(SOURCE_FILES
+        pe-custom/big-int.cpp
         pe-custom/rolling-queue.cpp
         pe-maths/gauss-sum.cpp
         pe-maths/is-prime.cpp
@@ -11,6 +12,7 @@ set(SOURCE_FILES
         )
 
 set(HEADER_FILES
+        pe-custom/big-int.h
         pe-custom/rolling-queue.h
         pe-maths/gauss-sum.h
         pe-maths/is-prime.h

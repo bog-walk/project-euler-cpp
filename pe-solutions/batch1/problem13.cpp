@@ -3,21 +3,23 @@
  *
  * https://projecteuler.net/problem=13
  *
- * Goal: Find the first 10 digits of the sum of N 50-digit numbers.
+ * Goal: Find the first 10 m_digits of the sum of N 50-digit numbers.
  *
  * Constraints: 1 <= N <= 1e3
  *
- * e.g.: N.B. This is a scaled-down example (first 2 digits of N 5-digit numbers)
+ * e.g.: N.B. This is a scaled-down example (first 2 m_digits of N 5-digit numbers)
  *       N = 3
  *       input = [34827, 93726, 90165]
  *       sum = 218_718
- *       1st 2 digits = 21
+ *       1st 2 m_digits = 21
  */
 
+#include <numeric>
 #include <vector>
 
 #include "../../doctest/doctest.h"
 
+#include "pe-custom/big-int.h"
 #include "pe-custom/rolling-queue.h"
 #include "pe-tests/get-test-resource.h"
 
@@ -39,7 +41,7 @@ std::string addInReverse(const std::vector<std::string>& numbers)
     for (std::size_t i = numbers.front().size(); i--;) {
         unsigned short sum {0};
         for (int j {0}; j < n; ++j) {
-            auto num = numbers[j][i] - 48;  // ASCII value of '0'
+            auto num = numbers[j][i] - '0';
             sum += num;
         }
         sum += carryOver;
@@ -56,11 +58,25 @@ std::string addInReverse(const std::vector<std::string>& numbers)
     return output.toString();
 }
 
+std::string sliceSum(const std::vector<std::string>& numbers)
+{
+    return std::accumulate(
+            numbers.cbegin(),
+            numbers.cend(),
+            BigInt {"0"},
+            [](const BigInt& acc, std::string num) {
+                return acc + BigInt {num};
+            })
+            .toString()
+            .substr(0, 10);
+}
+
 TEST_CASE("test when N = 1") {
     const std::vector<std::string> numbers {"123456789123456789"};
     const std::string expected {"1234567891"};
 
     CHECK_EQ(expected, addInReverse(numbers));
+    CHECK_EQ(expected, sliceSum(numbers));
 }
 
 TEST_CASE("test when numbers have few digits") {
@@ -68,6 +84,7 @@ TEST_CASE("test when numbers have few digits") {
     const std::string expected {"2414"};
 
     CHECK_EQ(expected, addInReverse(numbers));
+    CHECK_EQ(expected, sliceSum(numbers));
 }
 
 TEST_CASE("test when numbers have medium amount of digits") {
@@ -75,6 +92,7 @@ TEST_CASE("test when numbers have medium amount of digits") {
     const std::string expected {"1322606696"};
 
     CHECK_EQ(expected, addInReverse(numbers));
+    CHECK_EQ(expected, sliceSum(numbers));
 }
 
 TEST_CASE("test with max digits and lower N") {
@@ -83,20 +101,19 @@ TEST_CASE("test with max digits and lower N") {
     const std::string expected {"2728190129"};
 
     CHECK_EQ(expected, addInReverse(numbers));
+    CHECK_EQ(expected, sliceSum(numbers));
 }
-/*
+
 TEST_CASE("test with max digits and mid N") {
     const std::vector<std::string> numbers = getTestResource(
             "../resources/large-sum-100N.txt");
-    const std::string expected {"?"};
 
-    CHECK_EQ(expected, addInReverse(numbers));
+    CHECK_EQ(sliceSum(numbers), addInReverse(numbers));
 }
 
 TEST_CASE("test with max digits and upper N") {
     const std::vector<std::string> numbers = getTestResource(
             "../resources/large-sum-1000N.txt");
-    const std::string expected {"?"};
 
-    CHECK_EQ(expected, addInReverse(numbers));
-}*/
+    CHECK_EQ(sliceSum(numbers), addInReverse(numbers));
+}

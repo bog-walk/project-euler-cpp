@@ -14,7 +14,7 @@
 template <typename T>
 class RollingQueue {
 public:
-    explicit RollingQueue(std::size_t capacity) : m_capacity {capacity} {};
+    explicit RollingQueue(std::size_t capacity) : m_capacity {capacity} {}
 
     /**
      * Inserts element at the back of this queue without exceeding m_capacity, by
@@ -49,6 +49,7 @@ public:
 
     std::string toString() const
     {
+        // could use std::string.push_back() instead?
         std::stringstream output;
 
         std::queue<T> copy = m_data;
