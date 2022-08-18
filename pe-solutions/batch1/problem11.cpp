@@ -80,37 +80,39 @@ TEST_CASE("test product()") {
     CHECK_EQ(expected, product(n, nums));
 }
 
-TEST_CASE("test with small grid") {
-    int n {4};
-    auto** grid = getTestGrid<unsigned short>(
-            "../resources/largest-product-in-grid-4-by-4.txt",
-            n);
-    unsigned long expected {6};
+TEST_SUITE("test largestProductInGrid()") {
+    TEST_CASE("with small grid") {
+        int n {4};
+        auto** grid = getTestGrid<unsigned short>(
+                "../resources/largest-product-in-grid-4-by-4.txt",
+                n);
+        unsigned long expected {6};
 
-    CHECK_EQ(expected, largestProductInGrid(n, grid));
-}
+        CHECK_EQ(expected, largestProductInGrid(n, grid));
+    }
 
-TEST_CASE("test with medium grid") {
-    int n {6};
-    auto** grid = getTestGrid<unsigned short>(
-            "../resources/largest-product-in-grid-6-by-6.txt",
-            n);
-    unsigned long expected {15};
+    TEST_CASE("with medium grid") {
+        int n {6};
+        auto** grid = getTestGrid<unsigned short>(
+                "../resources/largest-product-in-grid-6-by-6.txt",
+                n);
+        unsigned long expected {15};
 
-    CHECK_EQ(expected, largestProductInGrid(n, grid));
-}
+        CHECK_EQ(expected, largestProductInGrid(n, grid));
+    }
 
-TEST_CASE("test with large grid") {
-    int n {20};
-    auto** grid = getTestGrid<unsigned short>(
-            "../resources/largest-product-in-grid-20-by-20.txt",
-            n);
-    unsigned long expected {70'600'674};
+    TEST_CASE("with large grid") {
+        int n {20};
+        auto** grid = getTestGrid<unsigned short>(
+                "../resources/largest-product-in-grid-20-by-20.txt",
+                n);
+        unsigned long expected {70'600'674};
 
-    // check large resource read properly
-    CHECK_EQ(8, grid[0][0]);
-    CHECK_EQ(48, grid[19][19]);
-    CHECK_EQ(72, grid[15][7]);
+        // check large resource read properly
+        CHECK_EQ(8, grid[0][0]);
+        CHECK_EQ(48, grid[19][19]);
+        CHECK_EQ(72, grid[15][7]);
 
-    CHECK_EQ(expected, largestProductInGrid(n, grid));
+        CHECK_EQ(expected, largestProductInGrid(n, grid));
+    }
 }
