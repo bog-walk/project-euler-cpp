@@ -26,7 +26,7 @@
  */
 unsigned long getNthPrime(unsigned short n)
 {
-    unsigned long number {1};
+    unsigned long number {1uL};
 
     while (n > 0) {
         if (isPrime(++number))
@@ -52,7 +52,7 @@ std::vector<unsigned long> getAllPrimes(unsigned short count)
     primes.reserve(count);
     primes.push_back(2);
 
-    unsigned long number {1};
+    unsigned long number {1uL};
     while (primes.size() < count) {
         number += 2;
         bool isPrime = true;

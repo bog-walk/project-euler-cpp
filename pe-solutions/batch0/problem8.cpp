@@ -28,7 +28,7 @@ unsigned long long stringProduct(std::string_view series)
 {
     // Possible to achieve with a single std::accumulate() but latter
     // does not allow (?) premature exit if character '0' is encountered
-    unsigned long long product {1};
+    unsigned long long product {1uLL};
 
     for (const char& ch : series) {
         if (ch == '0')
@@ -73,7 +73,7 @@ unsigned long long largestSeriesProduct(std::string_view number, unsigned short 
 
     unsigned long long largest {};
 
-    for (int i {}; i <= n - k; ++i) {
+    for (int i {0}; i <= n - k; ++i) {
         largest = std::max(largest, stringProduct(number.substr(i, k)));
     }
 

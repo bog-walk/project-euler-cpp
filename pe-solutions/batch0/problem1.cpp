@@ -28,7 +28,7 @@ unsigned long long sumOfMultiplesBrute(unsigned long n, unsigned long factor1,
 {
     unsigned long long sum {};
 
-    for (unsigned long num = std::min(factor1, factor2); num < n; ++num) {
+    for (auto num = std::min(factor1, factor2); num < n; ++num) {
         sum += !(num % factor1) || !(num % factor2) ? num : 0;
     }
 

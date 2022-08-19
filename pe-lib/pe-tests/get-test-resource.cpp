@@ -11,7 +11,7 @@
  */
 std::string getTestString(std::string_view filePath, std::string_view lineTrim)
 {
-    std::string resource {};
+    std::string resource;
     // is this a necessary use of string_view over const std::string&?
     std::ifstream resFile(static_cast<std::string>(filePath));
 
@@ -35,7 +35,7 @@ std::string getTestString(std::string_view filePath, std::string_view lineTrim)
 std::vector<std::string> getTestResource(std::string_view filePath,
                                          std::string_view lineTrim)
 {
-    std::vector<std::string> resource {};
+    std::vector<std::string> resource;
     std::ifstream myFile(static_cast<std::string>(filePath));
 
     if (myFile.is_open()) {

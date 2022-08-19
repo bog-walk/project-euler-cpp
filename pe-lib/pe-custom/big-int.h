@@ -46,11 +46,12 @@ public:
 
     std::string toString() const
     {
-        std::string output = m_digits;
+        //std::string output = m_digits;
+        return std::string {m_digits.rbegin(), m_digits.rend()};
 
-        std::reverse(output.begin(), output.end());
+        //std::reverse(output.begin(), output.end());
 
-        return output;
+        //return output;
     }
 
 protected:

@@ -28,7 +28,7 @@ std::vector<std::string> split(std::string_view line, std::string_view delimiter
     size_t start;
     size_t end {0};
 
-    std::vector<std::string> tokens {};
+    std::vector<std::string> tokens;
     // std::string::npos is the greatest possible value for element of type size_t
     // indicates end of string/no match/ -1
     while ((start = line.find_first_not_of(delimiter, end)) != std::string::npos) {

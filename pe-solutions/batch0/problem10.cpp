@@ -35,11 +35,11 @@ std::vector<unsigned long long> sumOfPrimesQD(unsigned long n)
         throw std::invalid_argument("Limit must be even otherwise loop check needed");
 
     // no way to initialise a constant vector with a lambda?
-    std::vector<bool> primesBool {};
+    std::vector<bool> primesBool;
     // declaring vector with size would initialise with default & require
     // assignment instead of push_back()
     primesBool.reserve(n + 1);
-    for (int i {}; i <= n; ++i) {
+    for (int i {0}; i <= n; ++i) {
         primesBool.push_back(i > 2 && i % 2 || i == 2);
     }
 
@@ -81,7 +81,7 @@ std::vector<unsigned long long> sumOfPrimesQD(unsigned long n)
 std::vector<unsigned long long> sumOfPrimesQDOpt(unsigned long n)
 {
     std::vector<unsigned long long> sums(n + 1);
-    unsigned long long total {2};
+    unsigned long long total {2uLL};
     sums[2] = total;
 
     for (int i {3}; i <= n; i += 2) {

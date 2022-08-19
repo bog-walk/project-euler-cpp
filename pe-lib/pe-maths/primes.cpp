@@ -12,7 +12,7 @@ std::vector<unsigned long> primeNumbers(unsigned long n)
     if (n < 2)
         return {};
 
-    auto oddSieve = (n - 1) / 2;
+    const auto oddSieve = (n - 1) / 2;
     // create mask representing [2, 3..n step 2]
     std::vector<bool> boolMask(oddSieve + 1, true);
     // boolMask[0] corresponds to prime 2 and is skipped

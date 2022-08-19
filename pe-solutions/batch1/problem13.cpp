@@ -34,12 +34,12 @@ std::string addInReverse(const std::vector<std::string>& numbers)
         return numbers.front().substr(0, 10);
 
     RollingQueue<unsigned long> output {10};
-    unsigned short carryOver {0};
+    unsigned short carryOver {};
     // std::size_t is unsigned long long
     // standard for-loop causes infinite loop as unsigned numbers always non-negative
     // n.b post-fix decrementor as 2nd not 3rd arg, otherwise final step missed
     for (std::size_t i = numbers.front().size(); i--;) {
-        unsigned short sum {0};
+        unsigned short sum {};
         for (int j {0}; j < n; ++j) {
             auto num = numbers[j][i] - '0';
             sum += num;

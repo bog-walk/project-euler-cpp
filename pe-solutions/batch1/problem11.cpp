@@ -26,11 +26,7 @@ unsigned long product(std::size_t len, unsigned short* arr)
 {
     // To use std::begin(arr) & std::end(arr), must pass array of fixed size
     // as ref, e.g. unsigned short (&arr)[10]
-    return std::accumulate(
-            &arr[0],
-            &arr[len],
-            static_cast<unsigned long>(1),
-            std::multiplies<>());
+    return std::accumulate(&arr[0], &arr[len], 1uL, std::multiplies<>());
 }
 
 // Pass by value a pointer to the decayed type 2D array

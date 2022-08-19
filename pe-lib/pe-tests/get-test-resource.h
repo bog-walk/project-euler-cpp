@@ -32,7 +32,7 @@ std::vector<std::vector<T>> getTestResource(
         std::string_view lineSplit = " ",
         std::string_view lineTrim = " \n")
 {
-    std::vector<std::vector<T>> resource {};
+    std::vector<std::vector<T>> resource;
     std::ifstream myFile(static_cast<std::string>(filePath));
 
     if (myFile.is_open()) {
@@ -40,7 +40,7 @@ std::vector<std::vector<T>> getTestResource(
         // getLine has delimiter arg but only for single characters :(
         while (std::getline(myFile, line)) {
             auto elements = split(trim(line, lineTrim), lineSplit);
-            std::vector<T> transformed {};
+            std::vector<T> transformed;
             std::for_each(
                     elements.begin(),
                     elements.end(),

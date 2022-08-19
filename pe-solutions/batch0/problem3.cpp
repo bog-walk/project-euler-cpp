@@ -26,7 +26,7 @@ unsigned long long largestPrimeFactor(unsigned long long n)
 {
     pfMap primes = primeFactors(n);
 
-    unsigned long long largest {2};
+    unsigned long long largest {2uLL};
 
     for (const auto& [k, _] : primes) {
         if (k > largest)
@@ -41,7 +41,7 @@ unsigned long long largestPrimeFactor(unsigned long long n)
  */
 unsigned long long largestPrimeFactorSimple(unsigned long long n)
 {
-    for (unsigned long long factor {2}; factor * factor <= n; ++factor) {
+    for (unsigned long long factor {2uLL}; factor * factor <= n; ++factor) {
         while (!(n % factor) && n != factor) {
             n /= factor;
         }

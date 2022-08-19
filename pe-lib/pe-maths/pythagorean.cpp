@@ -11,7 +11,7 @@
  */
 bool isCoPrime(unsigned long x, unsigned long y)
 {
-    return std::gcd(x, y) == 1;
+    return std::gcd(x, y) == 1uL;
 }
 
 /**

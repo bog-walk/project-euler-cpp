@@ -24,16 +24,18 @@
 
 #include "pe-maths/pythagorean.h"
 
-unsigned long product(triple triplet)
+long product(triple triplet)
 {
-    return std::get<0>(triplet) * std::get<1>(triplet) * std::get<2>(triplet);
+    auto p = std::get<0>(triplet) * std::get<1>(triplet) * std::get<2>(triplet);
+
+    return static_cast<long>(p);
 }
 
-unsigned long maxTripProduct(unsigned short n,
+long maxTripProduct(unsigned short n,
                     const std::function<std::optional<triple>(unsigned short)>& solution)
 {
     auto triplet = solution(n);
-    return triplet.has_value() ? product(triplet.value()) : -1;
+    return triplet.has_value() ? product(triplet.value()) : -1L;
 }
 
 /**
@@ -53,7 +55,7 @@ std::optional<triple> maxTripletBruteBC(unsigned short n)
     if (n % 2)
         return {};
 
-    std::optional<triple> maxTriplet {};
+    std::optional<triple> maxTriplet;
 
     for (int c = n / 2 - 1; c >= 5; --c) {
         auto diff = n - c;
@@ -61,7 +63,7 @@ std::optional<triple> maxTripletBruteBC(unsigned short n)
             auto a = diff - b;
             if (b <= a)
                 break;
-            if (hypot(a, b) == c) {
+            if (std::hypot(a, b) == c) {
                 maxTriplet = {a, b, c};
                 break;
             }
@@ -97,7 +99,7 @@ std::optional<triple> maxTripletBruteA(unsigned short n)
     for (int a = n / 3 - 1; a >= 3; --a) {
         auto b = n * (n - 2 * a) / (2 * (n - a));
         auto c = n - a - b;
-        if (a < b && hypot(a, b) == c) {
+        if (a < b && std::hypot(a, b) == c) {
             maxTriplet = {a, b, c};
             break;
         }
@@ -127,7 +129,7 @@ std::optional<triple> maxTripletOptimised(unsigned short num)
     std::optional<triple> maxTriplet;
 
     const auto limit = num / 2;
-    const auto mMax = ceil(sqrt(limit));
+    const auto mMax = std::ceil(std::sqrt(limit));
     for (int m {2}; m < mMax; ++m) {
         if (!(limit % m)) {
             // find even divisor m (> 1) of num/2

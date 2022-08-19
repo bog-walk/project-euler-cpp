@@ -67,7 +67,7 @@ unsigned short countDivisors(unsigned short n)
 unsigned long firstTriangleOverNBrute(unsigned short n)
 {
     if (n == 1)
-        return 3;
+        return 3uL;
 
     // t = D(2) = D(1) * D(3)
     // dn1 = D(3) = 2
@@ -95,13 +95,13 @@ unsigned long firstTriangleOverNBrute(unsigned short n)
  */
 unsigned long firstTriangleOverN(unsigned short n)
 {
-    const unsigned short nMax = std::min(n * 53, 41100);
+    const auto nMax = std::min(n * 53, 41100);
     // cannot use array because variable-sized object cannot be initialised;
     // would have to use dynamic memory allocation to create an array during run-time.
     // unsigned long arr[nMax] {} would have to be used as, without {}, elements
     // would not be instantiated to default value.
     std::vector<unsigned short> divisorCount(nMax, 0);
-    unsigned short num {0}, dT {0};
+    unsigned short num {}, dT {};
 
     while (dT <= n) {
         num++;
@@ -127,10 +127,10 @@ unsigned long firstTriangleOverNUsingPrimes(unsigned short n)
         return 3;
 
     const auto primes = primeNumbers(n * 2);
-    unsigned long prime {3};
+    unsigned long prime {3uL};
 
     unsigned short dn {2};  // min num of divisors for any prime
-    unsigned short count {0};
+    unsigned short count {};
     while (count <= n) {
         prime++;
         auto n1 = prime;

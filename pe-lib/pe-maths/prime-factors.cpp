@@ -19,7 +19,7 @@ pfMap primeFactors(unsigned long long n)
 
     pfMap primes;
 
-    for (unsigned long long factor {2}; factor * factor <= n; ++factor) {
+    for (unsigned long long factor {2uLL}; factor * factor <= n; ++factor) {
         // C++ value 0 equates to false
         while (!(n % factor) && n != factor) {
             // unlike at(), operator[] inserts key if doesn't exist

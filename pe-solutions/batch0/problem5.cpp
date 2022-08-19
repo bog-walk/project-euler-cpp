@@ -26,7 +26,7 @@
  */
 unsigned long long lcmOfRange(unsigned short n)
 {
-    auto limit = !(n & 1) ? n / 2 : n / 2 + 1;
+    const auto limit = !(n & 1) ? n / 2 : n / 2 + 1;
     std::vector<unsigned short> range(limit);
     // initialise a range of decrementing values
     std::iota(range.rbegin(), range.rend(), n / 2 + 1);
@@ -34,7 +34,7 @@ unsigned long long lcmOfRange(unsigned short n)
     return std::accumulate(
             range.rbegin(),
             range.rend(),
-            static_cast<unsigned long long>(1),
+            1uLL,
             [] (unsigned long long acc, unsigned short num) {
                 return std::lcm(acc, num);
             });
@@ -58,9 +58,9 @@ unsigned long long lcmOfRange(unsigned short n)
  */
 unsigned long long lcmOfRangeUsingPrimes(unsigned short n)
 {
-    unsigned long long result {1};
+    unsigned long long result {1uLL};
 
-    for (const unsigned long& prime : primeNumbers(n)) {
+    for (const auto& prime : primeNumbers(n)) {
         if (prime * prime > n) {
             result *= prime;
         }

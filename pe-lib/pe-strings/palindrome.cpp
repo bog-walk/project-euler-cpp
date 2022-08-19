@@ -35,7 +35,7 @@ bool isPalindromeRecursive(std::string_view s)
 
 bool isPalindrome(std::string_view s)
 {
-    for (int i {}; i < s.length() / 2; ++i) {
+    for (int i {0}; i < s.length() / 2; ++i) {
         if (s[i] != s[s.length() - 1 - i])
             return false;
     }
@@ -48,7 +48,7 @@ bool isPalindromeNumber(unsigned long long n)
     if (n < 10)
         return true;
 
-    unsigned long long rev {0}, num {n};
+    unsigned long long rev {}, num {n};
 
     while (num > 0) {
         rev = rev * 10 + num % 10;

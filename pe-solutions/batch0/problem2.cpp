@@ -20,7 +20,7 @@
  */
 unsigned long long sumOfEvenFibsNaive(unsigned long long n)
 {
-    unsigned long long sum {}, prev2 {1}, prev1 {2};
+    unsigned long long sum {}, prev2 {1uLL}, prev1 {2uLL};
 
     while (prev1 < n) {
         if (!(prev1 & 1))
@@ -41,7 +41,7 @@ unsigned long long sumOfEvenFibsNaive(unsigned long long n)
  */
 unsigned long long sumOfEvenFibsBrute(unsigned long long n)
 {
-    unsigned long long sum {0}, prev {1}, evenFib {2};
+    unsigned long long sum {}, prev {1uLL}, evenFib {2uLL};
 
     while (evenFib < n) {
         sum += evenFib;
@@ -59,8 +59,8 @@ unsigned long long sumOfEvenFibsBrute(unsigned long long n)
  */
 unsigned long long sumOfEvenFibsFormula(unsigned long long n)
 {
-    unsigned long long sum {10};
-    unsigned long long evenFibs[] {2, 8};  // [F(3), F(6)]
+    unsigned long long sum {10uLL};
+    unsigned long long evenFibs[] {2uLL, 8uLL};  // [F(3), F(6)]
 
     while (true) {
         auto nextEvenFib = evenFibs[0] + 4 * evenFibs[1];

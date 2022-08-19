@@ -18,7 +18,7 @@ bool isPrime(unsigned long n)
         return false;
 
     // n can only have 1 prime factor > sqrt(n): n itself!
-    const auto max = static_cast<unsigned long>(sqrt(n));
+    const auto max = static_cast<unsigned long>(std::sqrt(n));
     // as multiples of prime 5 have not been assessed yet
     // 11, 13, 17, 19, & 23 will all bypass this loop
     for (int step {5}; step <= max; step += 6) {

@@ -134,7 +134,7 @@ unsigned long largestPalindromeProductAlt(unsigned long n)
         num--;
     }
 
-    return 101'101;
+    return 101'101uL;
 }
 
 TEST_CASE("test lower constraints") {

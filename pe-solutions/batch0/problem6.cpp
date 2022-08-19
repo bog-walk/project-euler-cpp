@@ -30,7 +30,7 @@ unsigned long long sumSquareDiffBrute(unsigned short n)
     auto [sumOfRange, sumOfSquares] = std::accumulate(
             range.cbegin(),
             range.cend(),
-            std::pair<unsigned long long, unsigned long long> {1, 1},
+            std::pair<unsigned long long, unsigned long long> {1uLL, 1uLL},
             [] (std::pair<unsigned long long, unsigned long long> acc,
                     unsigned short num){
                 return std::pair {acc.first + num, acc.second + num * num};
