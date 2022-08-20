@@ -1,6 +1,8 @@
 set(SOURCE_FILES
+        pe-combinatorics/binomial-coeff.cpp
         pe-custom/big-int.cpp
         pe-custom/rolling-queue.cpp
+        pe-maths/factorial.cpp
         pe-maths/gauss-sum.cpp
         pe-maths/is-prime.cpp
         pe-maths/prime-factors.cpp
@@ -12,8 +14,10 @@ set(SOURCE_FILES
         )
 
 set(HEADER_FILES
+        pe-combinatorics/binomial-coeff.h
         pe-custom/big-int.h
         pe-custom/rolling-queue.h
+        pe-maths/factorial.h
         pe-maths/gauss-sum.h
         pe-maths/is-prime.h
         pe-maths/prime-factors.h

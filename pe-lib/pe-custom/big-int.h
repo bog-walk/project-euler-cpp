@@ -41,19 +41,41 @@ public:
         m_digits = rhs.m_digits;
     }
 
+    // way to create global namespace constants?
+    static BigInt zero() { return BigInt {0uLL}; }
+    static BigInt one() { return BigInt {1uLL}; }
+    static BigInt ten() { return BigInt {10uLL}; }
+
+    friend bool operator==(const BigInt&, const BigInt&);
+    friend bool operator!=(const BigInt&, const BigInt&);
+    friend bool operator<(const BigInt&, const BigInt&);
+    friend bool operator>(const BigInt&, const BigInt&);
+    friend bool operator<=(const BigInt&, const BigInt&);
+    friend bool operator>=(const BigInt&, const BigInt&);
+
+    // Prefex operators
+    BigInt& operator++();
+    BigInt& operator--();
+    // Postfix operators
+    BigInt operator++(int temp);
+    BigInt operator--(int temp);
+
     friend BigInt& operator+=(BigInt&, const BigInt&);
     friend BigInt operator+(const BigInt&, const BigInt&);
+    friend BigInt& operator-=(BigInt&, const BigInt&);
+    friend BigInt operator-(const BigInt&, const BigInt&);
+
+    friend BigInt& operator*=(BigInt&, const BigInt&);
+    friend BigInt operator*(const BigInt&, const BigInt&);
+    friend BigInt& operator/=(BigInt&, const BigInt&);
+    friend BigInt operator/(const BigInt&, const BigInt&);
+    friend BigInt& operator%=(BigInt&, const BigInt&);
+    friend BigInt operator%(const BigInt&, const BigInt&);
 
     std::string toString() const
     {
-        //std::string output = m_digits;
         return std::string {m_digits.rbegin(), m_digits.rend()};
-
-        //std::reverse(output.begin(), output.end());
-
-        //return output;
     }
-
 protected:
     std::string m_digits;
 
