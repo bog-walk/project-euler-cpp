@@ -72,9 +72,53 @@ public:
     friend BigInt& operator%=(BigInt&, const BigInt&);
     friend BigInt operator%(const BigInt&, const BigInt&);
 
+    BigInt pow(const BigInt& exp) const
+    {
+        if (exp == BigInt::zero())
+            return BigInt::one();
+
+        BigInt base {*this}, exponent {exp}, result {1uLL};
+
+        while (!(exponent.length() == 1 && exponent.m_digits[0] == '0')) {
+            if (exponent.m_digits[0] - '0' & 1)
+                result *= base;
+            base *= base;
+            int add {};
+            for (int i = exponent.length() - 1; i >= 0; --i) {
+                auto digit = (exponent.m_digits[i] - '0' >> 1) + add;
+                add = (exponent.m_digits[i] - '0' & 1) * 5;
+                exponent.m_digits[i] = digit + '0';
+            }
+            while (exponent.length() > 1 && !(exponent.m_digits.back() - '0')) {
+                exponent.m_digits.pop_back();
+            }
+        }
+
+        return result;
+    }
+
     std::string toString() const
     {
         return std::string {m_digits.rbegin(), m_digits.rend()};
+    }
+    /**
+     * @throws std::out_of_range if converted value would overflow unsigned long range.
+     */
+    unsigned long toULong() const
+    {
+        if (*this == BigInt::zero())
+            return 0uL;  // this shouldn't be necessary
+        return std::stoul(this -> toString());
+    }
+    /**
+     * @throws std::out_of_range if converted value would overflow unsigned long long
+     * range.
+     */
+    unsigned long long toULLong() const
+    {
+        if (*this == BigInt::zero())
+            return 0uLL;  // this shouldn't be necessary
+        return std::stoull(this -> toString());
     }
 protected:
     std::string m_digits;

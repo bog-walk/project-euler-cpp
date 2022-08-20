@@ -290,6 +290,21 @@ TEST_SUITE("test BigInt") {
         CHECK_EQ(number, d.toString());
     }
 
+    TEST_CASE("conversion to smaller numbers") {
+        unsigned long num1 {1'234'567'890};
+        unsigned long long num2 {123'456'789'012'345};
+        const BigInt ul {1uLL * num1};
+        const BigInt ull {num2};
+        const BigInt bi {"123456789012345678901234567890"};
+
+        CHECK_EQ(num1, ul.toULong());
+        CHECK_EQ(num1, ul.toULLong());
+        CHECK_EQ(num2, ull.toULLong());
+
+        CHECK_THROWS_AS(ull.toULong(), std::out_of_range);
+        CHECK_THROWS_AS(bi.toULLong(), std::out_of_range);
+    }
+
     TEST_CASE("equality comparison") {
         std::string number {"1234567890"};
         unsigned long long num {1234567890};
@@ -519,5 +534,27 @@ TEST_SUITE("test BigInt") {
         const std::string expected {"7"};
 
         CHECK_EQ(expected, a.toString());
+    }
+
+    TEST_CASE("pow() when exp = 0") {
+        const BigInt a {"1000"};
+        const BigInt b = BigInt::zero();
+
+        CHECK_EQ(BigInt::one(), a.pow(b));
+    }
+
+    TEST_CASE("pow() when exp = 1") {
+        const BigInt a {"1000"};
+        const BigInt b = BigInt::one();
+
+        CHECK_EQ(a, a.pow(b));
+    }
+
+    TEST_CASE("pow() when exp > 1") {
+        const BigInt a {"2"};
+        const BigInt b {"3"};
+        const std::string expected {"8"};
+
+        CHECK_EQ(expected, a.pow(b).toString());
     }
 }
