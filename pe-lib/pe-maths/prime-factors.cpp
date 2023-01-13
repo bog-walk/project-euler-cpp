@@ -1,16 +1,15 @@
 #include "prime-factors.h"
 
 #include <stdexcept>
-#include <vector>
 
 #include "../../doctest/doctest.h"
 
-/**
+/*
  * Prime decomposition repeatedly divides out all prime factors using a Direct Search
  * Factorisation algorithm without any optimisation.
  *
  * @return map of prime factors (keys) and their exponents (values).
- * @throws std::invalid_argument if [n] <= 1.
+ * @throws std::invalid_argument if n <= 1.
  */
 pfMap primeFactors(unsigned long long n)
 {
@@ -20,7 +19,6 @@ pfMap primeFactors(unsigned long long n)
     pfMap primes;
 
     for (unsigned long long factor {2uLL}; factor * factor <= n; ++factor) {
-        // C++ value 0 equates to false
         while (!(n % factor) && n != factor) {
             // unlike at(), operator[] inserts key if doesn't exist
             primes[factor]++;
@@ -32,6 +30,26 @@ pfMap primeFactors(unsigned long long n)
         primes[n]++;
 
     return primes;
+}
+
+/*
+ * Flattens prime factor decomposition, such that, for example:
+ *      pf(10) = {2: 2, 5: 2} -> {2, 2, 5, 5}
+ *
+ * @return list of prime factors duplicated by their exponent count.
+ */
+std::vector<unsigned long long> primeFactorsFlattened(const pfMap& factors)
+{
+    std::vector<unsigned long long> flattened;
+
+    for (const auto& [k, v] : factors) {
+        // list used since it is potentially expensive to insert(pos, count, value) if
+        // count is high?
+        std::vector<unsigned long long> f(v, k);
+        flattened.insert(flattened.end(), f.begin(), f.end());
+    }
+
+    return flattened;
 }
 
 TEST_SUITE("test primeFactors()") {
@@ -51,11 +69,9 @@ TEST_SUITE("test primeFactors()") {
 
         for (const auto& n : nValues) {
             auto i = &n - &nValues[0];
-            pfMap primes = primeFactors(n);
-            std::vector<unsigned long long> flattened;
-            for (const auto& [k, v] : primes) {
-                flattened.insert(flattened.end(), v, k);
-            }
+            const auto& factors = primeFactors(n);
+            std::vector<unsigned long long> flattened = primeFactorsFlattened(factors);
+
             CHECK_EQ(expected[i], flattened);
         }
     }

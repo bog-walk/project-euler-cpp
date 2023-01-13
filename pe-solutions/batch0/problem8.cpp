@@ -20,8 +20,8 @@
 
 #include "pe-tests/get-test-resource.h"
 
-/**
- * The constraints of this solution ensure that [series] will not exceed 13 characters,
+/*
+ * The constraints of this solution ensure that series will not exceed 13 characters,
  * so the max product of 13 '9's would be less than ULLONG_MAX.
  */
 unsigned long long stringProduct(std::string_view series)
@@ -46,7 +46,7 @@ unsigned long long largestSeriesProductRecursive(std::string_view number,
         return std::stoull(static_cast<std::string>(number));
 
     if (k == 1) {
-        // ASCII value of 0 is 48
+        // ASCII value of '0' is 48
         return *std::max_element(number.cbegin(), number.cend()) - 48;
     }
 
@@ -58,8 +58,7 @@ unsigned long long largestSeriesProductRecursive(std::string_view number,
             largestSeriesProductRecursive(number.substr(0, k), k, k),
             // original string minus the first digit
             // substr() default 2nd arg is remainder after 1st arg index
-            largestSeriesProductRecursive(number.substr(1), n - 1, k)
-            );
+            largestSeriesProductRecursive(number.substr(1), n - 1, k));
 }
 
 unsigned long long largestSeriesProduct(std::string_view number, unsigned short n,
@@ -155,6 +154,7 @@ TEST_SUITE("test small strings") {
 TEST_CASE("test 100 digit number") {
     unsigned short n {100}, k {6};
     // create a number of all '1's except for 6 adjacent '6's
+    // better practice to create character array then convert to string?
     std::string series(n, '1');
     for (int i {60}; i <= 65; ++i) {
         series[i] = '6';
@@ -170,8 +170,7 @@ TEST_CASE("test 1000 digit number") {
     unsigned short kValues[] {13, 4};
     unsigned long long expected[] {23'514'624'000, 5832};
     const std::string resource = getTestString(
-            "../resources/largest-product-in-series-1000.txt"
-            );
+            "../resources/largest-product-in-series-1000.txt");
 
     for (const auto& k : kValues) {
         auto i = &k - &kValues[0];

@@ -14,7 +14,7 @@
 
 #include "../../doctest/doctest.h"
 
-/**
+/*
  * Brute iteration over all Fibonacci terms using the formula:
  *      F_n = F_{n-2} + F_{n-1}
  */
@@ -33,7 +33,7 @@ unsigned long long sumOfEvenFibsNaive(unsigned long long n)
     return sum;
 }
 
-/**
+/*
  * Sums every 3rd term in the sequence starting with 2, based on the observed pattern
  * that every 3rd Fibonacci number after 2 is even. This occurs because the sequence
  * begins with 2 odd numbers, the sum of which must be even, then the sum of an odd and
@@ -53,14 +53,14 @@ unsigned long long sumOfEvenFibsBrute(unsigned long long n)
     return sum;
 }
 
-/**
+/*
  * Sums every 3rd term in the sequence starting with 2, using the formula:
  *      F_n = F_{n-6} + 4F_{n-3}
  */
 unsigned long long sumOfEvenFibsFormula(unsigned long long n)
 {
     unsigned long long sum {10uLL};
-    unsigned long long evenFibs[] {2uLL, 8uLL};  // [F(3), F(6)]
+    unsigned long long evenFibs[] {2, 8};  // [F(3), F(6)]
 
     while (true) {
         auto nextEvenFib = evenFibs[0] + 4 * evenFibs[1];

@@ -22,11 +22,16 @@
 #include "pe-tests/get-test-resource.h"
 
 // Size of array must be passed into function as array is being passed as pointer.
-unsigned long product(std::size_t len, unsigned short* arr)
+inline unsigned long product(std::size_t len, unsigned short* arr)
 {
     // To use std::begin(arr) & std::end(arr), must pass array of fixed size
     // as ref, e.g. unsigned short (&arr)[10]
-    return std::accumulate(&arr[0], &arr[len], 1uL, std::multiplies<>());
+    return std::accumulate(
+            &arr[0],
+            &arr[len],
+            1uL,
+            std::multiplies<>()
+            );
 }
 
 // Pass by value a pointer to the decayed type 2D array
@@ -39,8 +44,8 @@ unsigned long largestProductInGrid(std::size_t len, unsigned short** grid)
         for (int col {0}; col <= len - k; ++col) {
             unsigned short right[k], down[k];
             for (int i {0}; i < k; ++i) {
-                right[i] = grid[row][col + i];
-                down[i] = grid[col + i][row];
+                right[i] = grid[row][col+i];
+                down[i] = grid[col+i][row];
             }
             unsigned long rightP = product(k, right);
             if (rightP > largest)
@@ -52,8 +57,8 @@ unsigned long largestProductInGrid(std::size_t len, unsigned short** grid)
             if (row <= len - k) {
                 unsigned short leadingDiag[k], counterDiag[k];
                 for (int i {0}; i < k; ++i) {
-                    leadingDiag[i] = grid[row + i][col + i];
-                    counterDiag[i] = grid[row + i][col + k - 1 - i];
+                    leadingDiag[i] = grid[row+i][col+i];
+                    counterDiag[i] = grid[row+i][col+k-1-i];
                 }
                 unsigned long leadingDiagP = product(k, leadingDiag);
                 if (leadingDiagP > largest)
@@ -68,7 +73,7 @@ unsigned long largestProductInGrid(std::size_t len, unsigned short** grid)
     return largest;
 }
 
-TEST_CASE("test product()") {
+TEST_CASE("test helper product()") {
     int n {4};
     unsigned short nums[] {26, 63, 78, 14};
     unsigned long expected {1'788'696};
@@ -80,8 +85,7 @@ TEST_SUITE("test largestProductInGrid()") {
     TEST_CASE("with small grid") {
         int n {4};
         auto** grid = getTestGrid<unsigned short>(
-                "../resources/largest-product-in-grid-4-by-4.txt",
-                n);
+                "../resources/largest-product-in-grid-4-by-4.txt",n);
         unsigned long expected {6};
 
         CHECK_EQ(expected, largestProductInGrid(n, grid));
@@ -90,8 +94,7 @@ TEST_SUITE("test largestProductInGrid()") {
     TEST_CASE("with medium grid") {
         int n {6};
         auto** grid = getTestGrid<unsigned short>(
-                "../resources/largest-product-in-grid-6-by-6.txt",
-                n);
+                "../resources/largest-product-in-grid-6-by-6.txt",n);
         unsigned long expected {15};
 
         CHECK_EQ(expected, largestProductInGrid(n, grid));
@@ -100,8 +103,7 @@ TEST_SUITE("test largestProductInGrid()") {
     TEST_CASE("with large grid") {
         int n {20};
         auto** grid = getTestGrid<unsigned short>(
-                "../resources/largest-product-in-grid-20-by-20.txt",
-                n);
+                "../resources/largest-product-in-grid-20-by-20.txt",n);
         unsigned long expected {70'600'674};
 
         // check large resource read properly

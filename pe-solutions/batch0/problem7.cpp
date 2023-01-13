@@ -18,17 +18,17 @@
 
 #include "pe-maths/is-prime.h"
 
-/**
+/*
  * Solution iterates over all numbers & checks for primality using an optimised helper
- * function, until the [n]th prime is found.
+ * function, until the nth prime is found.
  *
  * Odd numbers are not excluded from this iteration.
  */
 unsigned long getNthPrime(unsigned short n)
 {
-    unsigned long number {1uL};
+    unsigned long number {1};
 
-    while (n > 0) {
+    while (n) {
         if (isPrime(++number))
             n--;
     }
@@ -36,8 +36,8 @@ unsigned long getNthPrime(unsigned short n)
     return number;
 }
 
-/**
- * Solution generates a list of primes of size [count] for quick-draw access.
+/*
+ * Solution generates a list of primes of size count for quick-draw access.
  *
  * The dynamic list itself is used to test primality of every number based on the prime
  * factorisation principle. The same rules for primes apply, namely that every prime
@@ -52,10 +52,8 @@ std::vector<unsigned long> getAllPrimes(unsigned short count)
     primes.reserve(count);
     primes.push_back(2);
 
-    unsigned long number {1uL};
-    while (primes.size() < count) {
-        number += 2;
-        bool isPrime = true;
+    for (int number {3}; primes.size() < count; number += 2) {
+        bool isPrime {true};
         for (auto& p : primes) {
             if (p * p > number)
                 break;
@@ -72,8 +70,18 @@ std::vector<unsigned long> getAllPrimes(unsigned short count)
 }
 
 TEST_SUITE("test both P7 solutions") {
-    // Clang-Tidy static storage duration warning?
-    const std::vector<unsigned long> allPrimes = getAllPrimes(10001);
+    // Following causes -> Clang-Tidy: Initialization of 'allPrimes' with static storage
+    // duration may throw an exception that cannot be caught?
+    // const std::vector<unsigned long> allPrimes = getAllPrimes(10'001);
+    std::vector<unsigned long> allPrimes;
+
+    // This works because tests are registered from top to bottom of each processed cpp?
+    TEST_CASE("setup of quick-access") {
+        unsigned short count {10'001};
+        allPrimes = getAllPrimes(count);
+
+        CHECK_EQ(count, allPrimes.size());
+    }
 
     TEST_CASE("with lower constraints") {
         unsigned short nValues[] {1, 2, 3, 4, 5, 6};
@@ -82,7 +90,7 @@ TEST_SUITE("test both P7 solutions") {
         for (const auto& n : nValues) {
             auto i = &n - &nValues[0];
             CHECK_EQ(expected[i], getNthPrime(n));
-            CHECK_EQ(expected[i], allPrimes[n - 1]);
+            CHECK_EQ(expected[i], allPrimes[n-1]);
         }
     }
 
@@ -93,7 +101,7 @@ TEST_SUITE("test both P7 solutions") {
         for (const auto& n : nValues) {
             auto i = &n - &nValues[0];
             CHECK_EQ(expected[i], getNthPrime(n));
-            CHECK_EQ(expected[i], allPrimes[n - 1]);
+            CHECK_EQ(expected[i], allPrimes[n-1]);
         }
     }
 
@@ -104,7 +112,7 @@ TEST_SUITE("test both P7 solutions") {
         for (const auto& n : nValues) {
             auto i = &n - &nValues[0];
             CHECK_EQ(expected[i], getNthPrime(n));
-            CHECK_EQ(expected[i], allPrimes[n - 1]);
+            CHECK_EQ(expected[i], allPrimes[n-1]);
         }
     }
 
@@ -115,7 +123,7 @@ TEST_SUITE("test both P7 solutions") {
         for (const auto& n : nValues) {
             auto i = &n - &nValues[0];
             CHECK_EQ(expected[i], getNthPrime(n));
-            CHECK_EQ(expected[i], allPrimes[n - 1]);
+            CHECK_EQ(expected[i], allPrimes[n-1]);
         }
     }
 }

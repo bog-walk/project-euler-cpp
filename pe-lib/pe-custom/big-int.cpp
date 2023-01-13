@@ -32,25 +32,24 @@ BigInt& BigInt::operator++()
     if (i == aS)
         m_digits.push_back('1');
     else
-        m_digits[i] = (m_digits[i] - '0') + 1 + '0';
+        m_digits[i] += 1;
 
     return *this;
 }
 BigInt& BigInt::operator--()
 {
-    if (m_digits.empty()) {
+    if (*this == BigInt::zero()) {
         throw std::runtime_error("Negative values not supported");
     }
 
     std::size_t aS = length();
     int i;
-    for (i = 0; m_digits[i] == '0' && i < aS; ++i) {
+    for (i = 0; i < aS && m_digits[i] == '0'; ++i) {
         m_digits[i] = '9';
     }
-    m_digits[i] = (m_digits[i] - '0') - 1 + '0';
+    m_digits[i] -= 1;
     if (aS > 1 && m_digits[aS-1] == '0')
         m_digits.pop_back();
-
 
     return *this;
 }
@@ -73,17 +72,16 @@ BigInt& operator+=(BigInt& a, const BigInt& b)
 {
     std::size_t aS = a.length(), bS = b.length();
     if (bS > aS) {  // modified BigInt may be of larger length
-        a.m_digits.append(bS - aS, '0');
-        aS = a.length();
+        a.m_digits.resize(bS, '0');
+        aS = bS;
     }
 
     unsigned short carryOver {};
     for (int i {0}, sum; i < aS; ++i) {
-        if (i < bS) {
+        if (i < bS)
             sum = (a.m_digits[i] - '0') + (b.m_digits[i] - '0') + carryOver;
-        } else {  // const BigInt may be of smaller length
+        else  // const BigInt may be of smaller length
             sum = (a.m_digits[i] - '0') + carryOver;
-        }
         carryOver = sum / 10;
         a.m_digits[i] = (sum % 10) + '0';
     }
@@ -107,15 +105,15 @@ BigInt& operator-=(BigInt& a, const BigInt& b)
 
     std::size_t aS = a.length(), bS = b.length();
     for (int i {0}, carryOver {0}, result; i < aS; ++i) {
-        if (i < bS) {
+        if (i < bS)
             result = (a.m_digits[i] - '0') - (b.m_digits[i] - '0') + carryOver;
-        } else {  // const BigInt may be of smaller length
+        else  // const BigInt may be of smaller length
             result = (a.m_digits[i] - '0') + carryOver;
-        }
         if (result < 0) {
             result += 10;
             carryOver = -1;
-        } else {
+        }
+        else {
             carryOver = 0;
         }
         a.m_digits[i] = result + '0';
@@ -144,7 +142,7 @@ BigInt& operator*=(BigInt& a, const BigInt& b)
     }
 
     std::size_t aS = a.length(), bS = b.length();
-    std::vector<unsigned long> cache(aS + bS, 0);
+    std::vector<int> cache(aS + bS, 0);
     for (int i {0}; i < aS; ++i) {
         for (int j {0}; j < bS; ++j) {
             cache[i+j] += (a.m_digits[i] - '0') * (b.m_digits[j] - '0');
@@ -152,7 +150,7 @@ BigInt& operator*=(BigInt& a, const BigInt& b)
     }
 
     aS += bS;
-    a.m_digits.resize(cache.size());
+    a.m_digits.resize(cache.size(), '0');
     for (int i {0}, carryOver {0}, result; i < aS; ++i) {
         result = carryOver + cache[i];
         cache[i] = result % 10;
@@ -183,9 +181,8 @@ BigInt& operator/=(BigInt& a, const BigInt& b)
         a = zero;
         return a;
     }
-    const auto one = BigInt::one();
     if (a == b) {
-        a = one;
+        a = BigInt::one();
         return a;
     }
 
@@ -202,7 +199,7 @@ BigInt& operator/=(BigInt& a, const BigInt& b)
     }
 
     std::vector<unsigned long> cache(aS, 0);
-    unsigned long long cc, lgcat {};
+    unsigned long long cc {}, lgcat {};
     for (; i >= 0; --i) {
         auto ch = BigInt {static_cast<unsigned long long>(a.m_digits[i] - '0')};
         carryOver = carryOver * ten + ch;
@@ -211,7 +208,7 @@ BigInt& operator/=(BigInt& a, const BigInt& b)
         cache[lgcat++] = cc;
     }
 
-    a.m_digits.resize(cache.size());
+    a.m_digits.resize(cache.size(), '0');
     for (i = 0; i < lgcat; ++i) {
         a.m_digits[i] = cache[lgcat-i-1] + '0';
     }
@@ -275,9 +272,9 @@ BigInt operator%(const BigInt& a, const BigInt& b)
 }
 
 TEST_SUITE("test BigInt") {
-    TEST_CASE("consructors and toString()") {
+    TEST_CASE("constructors and toString()") {
         std::string number {"1234567890"};
-        unsigned long long num {1234567890};
+        unsigned long long num {1'234'567'890};
 
         const BigInt a {number};
         const BigInt b {"1234567890"};
@@ -288,6 +285,19 @@ TEST_SUITE("test BigInt") {
         CHECK_EQ(number, b.toString());
         CHECK_EQ(number, c.toString());
         CHECK_EQ(number, d.toString());
+    }
+
+    TEST_CASE("constructors and toString() when zero") {
+        std::string number {"0"};
+        unsigned long long num {0};
+
+        const BigInt zero1 {number};
+        const BigInt zero2 {num};
+        const BigInt zero3 = BigInt::zero();
+
+        CHECK_EQ(number, zero1.toString());
+        CHECK_EQ(number, zero2.toString());
+        CHECK_EQ(number, zero3.toString());
     }
 
     TEST_CASE("conversion to smaller numbers") {
@@ -305,9 +315,18 @@ TEST_SUITE("test BigInt") {
         CHECK_THROWS_AS(bi.toULLong(), std::out_of_range);
     }
 
+    TEST_CASE("conversion when zero") {
+        const BigInt zero = BigInt::zero();
+        unsigned long expectedL {0uL};
+        unsigned long long expectedLL {0uLL};
+
+        CHECK_EQ(expectedL, zero.toULong());
+        CHECK_EQ(expectedLL, zero.toULLong());
+    }
+
     TEST_CASE("equality comparison") {
         std::string number {"1234567890"};
-        unsigned long long num {1234567890};
+        unsigned long long num {1'234'567'890};
 
         const BigInt a {number};
         const BigInt b {num};
@@ -384,6 +403,14 @@ TEST_SUITE("test BigInt") {
         CHECK_EQ(expected, (a + b).toString());
     }
 
+    TEST_CASE("addition with zero") {
+        const BigInt a {"1234567890"};
+        const BigInt b {"0"};
+        const std::string expected {"1234567890"};
+
+        CHECK_EQ(expected, (a + b).toString());
+    }
+
     TEST_CASE("addition when first number shorter") {
         const BigInt a {"1234"};
         const BigInt b {"1234567890"};
@@ -413,6 +440,14 @@ TEST_SUITE("test BigInt") {
         const BigInt a {"1234567890"};
         const BigInt b {"1234"};
         const std::string expected {"1234566656"};
+
+        CHECK_EQ(expected, (a - b).toString());
+    }
+
+    TEST_CASE("subtraction by zero") {
+        const BigInt a {"1234567890"};
+        const BigInt b {"0"};
+        const std::string expected {"1234567890"};
 
         CHECK_EQ(expected, (a - b).toString());
     }

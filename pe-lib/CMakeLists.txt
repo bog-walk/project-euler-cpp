@@ -1,6 +1,8 @@
 set(SOURCE_FILES
         pe-combinatorics/binomial-coeff.cpp
         pe-custom/big-int.cpp
+        pe-custom/extension.cpp
+        pe-custom/pyramid-tree.cpp
         pe-custom/rolling-queue.cpp
         pe-maths/factorial.cpp
         pe-maths/gauss-sum.cpp
@@ -16,6 +18,8 @@ set(SOURCE_FILES
 set(HEADER_FILES
         pe-combinatorics/binomial-coeff.h
         pe-custom/big-int.h
+        pe-custom/extension.h
+        pe-custom/pyramid-tree.h
         pe-custom/rolling-queue.h
         pe-maths/factorial.h
         pe-maths/gauss-sum.h

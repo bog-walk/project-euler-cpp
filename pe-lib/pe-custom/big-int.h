@@ -6,7 +6,7 @@
 #include <string>
 #include <stdexcept>
 
-/**
+/*
  * Class representing data type that stores numbers with a potential for more than 20
  * digits (i.e. exceeding unsigned long long limits).
  *
@@ -14,8 +14,9 @@
  */
 class BigInt {
 public:
+    // digits are stored in reverse order
     explicit BigInt(std::string& value)  {
-        m_digits = "";
+        m_digits.reserve(value.size());
         for (std::size_t i = value.size(); i--;) {
             if (!isdigit(value[i]))
                 throw std::invalid_argument("String must represent a number");
@@ -23,7 +24,7 @@ public:
         }
     }
     explicit BigInt(const char *value)  {
-        m_digits = "";
+        m_digits.reserve(strlen(value));
         for (std::size_t i = strlen(value); i--;) {
             if (!isdigit(value[i]))
                 throw std::invalid_argument("String must represent a number");
@@ -31,11 +32,10 @@ public:
         }
     }
     explicit BigInt(unsigned long long value)  {
-        m_digits = "";
-        while (value) {
+         do {
             m_digits.push_back(value % 10 + '0');
             value /= 10;
-        }
+         } while (value);
     }
     BigInt(const BigInt& rhs) {
         m_digits = rhs.m_digits;
@@ -53,10 +53,12 @@ public:
     friend bool operator<=(const BigInt&, const BigInt&);
     friend bool operator>=(const BigInt&, const BigInt&);
 
-    // Prefex operators
+    // Prefix operators
     BigInt& operator++();
     BigInt& operator--();
     // Postfix operators
+    // Clang-Tidy: Overloaded 'operator++' returns a non-constant object
+    // instead of a constant object type?
     BigInt operator++(int temp);
     BigInt operator--(int temp);
 
@@ -85,7 +87,7 @@ public:
             base *= base;
             int add {};
             for (int i = exponent.length() - 1; i >= 0; --i) {
-                auto digit = (exponent.m_digits[i] - '0' >> 1) + add;
+                auto digit = ((exponent.m_digits[i] - '0') >> 1) + add;
                 add = (exponent.m_digits[i] - '0' & 1) * 5;
                 exponent.m_digits[i] = digit + '0';
             }
@@ -101,29 +103,19 @@ public:
     {
         return std::string {m_digits.rbegin(), m_digits.rend()};
     }
-    /**
+    /*
      * @throws std::out_of_range if converted value would overflow unsigned long range.
      */
-    unsigned long toULong() const
-    {
-        if (*this == BigInt::zero())
-            return 0uL;  // this shouldn't be necessary
-        return std::stoul(this -> toString());
-    }
-    /**
+    unsigned long toULong() const { return std::stoul(this -> toString()); }
+    /*
      * @throws std::out_of_range if converted value would overflow unsigned long long
      * range.
      */
-    unsigned long long toULLong() const
-    {
-        if (*this == BigInt::zero())
-            return 0uLL;  // this shouldn't be necessary
-        return std::stoull(this -> toString());
-    }
-protected:
-    std::string m_digits;
+    unsigned long long toULLong() const { return std::stoull(this -> toString()); }
 
-    std::size_t length() const { return m_digits.length(); }
+protected:
+    std::vector<unsigned char> m_digits;
+    std::size_t length() const { return m_digits.size(); }
 };
 
 #endif //PROJECT_EULER_CPP_BIG_INT_H

@@ -3,19 +3,18 @@
  *
  * https://projecteuler.net/problem=13
  *
- * Goal: Find the first 10 m_digits of the sum of N 50-digit numbers.
+ * Goal: Find the first 10 digits of the sum of N 50-digit numbers.
  *
  * Constraints: 1 <= N <= 1e3
  *
- * e.g.: N.B. This is a scaled-down example (first 2 m_digits of N 5-digit numbers)
+ * e.g.: N.B. This is a scaled-down example (first 2 digits of N 5-digit numbers)
  *       N = 3
  *       input = [34827, 93726, 90165]
  *       sum = 218_718
- *       1st 2 m_digits = 21
+ *       1st 2 digits = 21
  */
 
 #include <numeric>
-#include <vector>
 
 #include "../../doctest/doctest.h"
 
@@ -23,17 +22,18 @@
 #include "pe-custom/rolling-queue.h"
 #include "pe-tests/get-test-resource.h"
 
-/**
+/*
  * Solution simulates manual addition from RTL, using custom RollingQueue class to
  * abstract away the need to maintain output length with every iteration.
  */
 std::string addInReverse(const std::vector<std::string>& numbers)
 {
+    const int ten {10};
     const auto n = numbers.size();
     if (n == 1)
-        return numbers.front().substr(0, 10);
+        return numbers.front().substr(0, ten);
 
-    RollingQueue<unsigned long> output {10};
+    RollingQueue<unsigned long> output(ten);
     unsigned short carryOver {};
     // std::size_t is unsigned long long
     // standard for-loop causes infinite loop as unsigned numbers always non-negative
@@ -45,13 +45,13 @@ std::string addInReverse(const std::vector<std::string>& numbers)
             sum += num;
         }
         sum += carryOver;
-        output.push(sum % 10);
-        carryOver = sum / 10;
+        output.push(sum % ten);
+        carryOver = sum / ten;
     }
 
     while (carryOver) {
-        output.push(carryOver % 10);
-        carryOver /= 10;
+        output.push(carryOver % ten);
+        carryOver /= ten;
     }
 
     output.reversed();
@@ -63,8 +63,8 @@ std::string sliceSum(const std::vector<std::string>& numbers)
     return std::accumulate(
             numbers.cbegin(),
             numbers.cend(),
-            BigInt {"0"},
-            [](const BigInt& acc, std::string num) {
+            BigInt::zero(),
+            [](BigInt& acc, std::string num) {
                 return acc + BigInt {num};
             })
             .toString()

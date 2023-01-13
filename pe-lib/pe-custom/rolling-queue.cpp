@@ -4,7 +4,7 @@
 
 TEST_SUITE("test RollingQueue") {
     TEST_CASE("initial state of un-filled instance") {
-        const int size {10};
+        std::size_t size {10};
         RollingQueue<int> rq {size};
         for (int i {2}; i < size - 3; ++i) {
             rq.push(i);
@@ -13,10 +13,14 @@ TEST_SUITE("test RollingQueue") {
         CHECK_EQ(5, rq.size());
         CHECK_EQ(2, rq.front());
         CHECK_EQ("23456", rq.toString());
+
+        // confirm call toString() did not affect underlying data
+        CHECK_EQ(5, rq.size());
+        CHECK_EQ(2, rq.front());
     }
 
     TEST_CASE("initial state of filled instance") {
-        const int size {5};
+        std::size_t size {5};
         RollingQueue<int> rq {size};
         for (int i {0}; i < size; ++i) {
             rq.push(i);
@@ -27,8 +31,8 @@ TEST_SUITE("test RollingQueue") {
         CHECK_EQ("01234", rq.toString());
     }
 
-    TEST_CASE("push beyond capacity") {
-        const int size {5};
+    TEST_CASE("push() beyond capacity") {
+        std::size_t size {5};
         RollingQueue<int> rq {size};
         for (int i {0}; i < size + 3; ++i) {
             rq.push(i);
@@ -40,7 +44,7 @@ TEST_SUITE("test RollingQueue") {
     }
 
     TEST_CASE("reversed()") {
-        const int size {5};
+        std::size_t size {5};
         RollingQueue<int> rq {size};
         for (int i {0}; i < size; ++i) {
             rq.push(i);

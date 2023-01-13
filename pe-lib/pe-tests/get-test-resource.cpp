@@ -4,20 +4,21 @@
 
 #include "../pe-strings/utility.cpp"
 
-/**
+/*
  * Retrieves content of a test resource file as a single std::string.
  *
  * @param lineTrim characters to remove from the left and right of each file line.
  */
-std::string getTestString(std::string_view filePath, std::string_view lineTrim)
+std::string getTestString(const std::string& filePath, std::string_view lineTrim)
 {
     std::string resource;
-    // is this a necessary use of string_view over const std::string&?
-    std::ifstream resFile(static_cast<std::string>(filePath));
+    std::ifstream resFile(filePath);
 
     if (resFile.is_open()) {
         std::string line {};
         while (std::getline(resFile, line)) {
+            // technically, end-of-line is extracted but not stored by getline()
+            // so no need to trim '\n'?
             resource.append(trim(line, lineTrim));
         }
         resFile.close();
@@ -26,104 +27,99 @@ std::string getTestString(std::string_view filePath, std::string_view lineTrim)
     return resource;
 }
 
-/**
+/*
  * Retrieves content of a test resource file, with each line returned as a trimmed, but
  * otherwise unaltered std::string.
  *
  * @param lineTrim characters to remove from the left and right of each file line.
  */
-std::vector<std::string> getTestResource(std::string_view filePath,
+std::vector<std::string> getTestResource(const std::string& filePath,
                                          std::string_view lineTrim)
 {
     std::vector<std::string> resource;
-    std::ifstream myFile(static_cast<std::string>(filePath));
+    std::ifstream resFile(filePath);
 
-    if (myFile.is_open()) {
+    if (resFile.is_open()) {
         std::string line {};
-        while (std::getline(myFile, line)) {
+        while (std::getline(resFile, line)) {
             resource.push_back(trim(line, lineTrim));
         }
-        myFile.close();
+        resFile.close();
     }
 
     return resource;
 }
 
-TEST_CASE("test getTestString()") {
-    std::string_view path {"../../resources/fake-resource.txt"};
-    std::string expected {};
-    for (int i {}; i < 5; ++i) {
-        expected.append("1, 2, 3, 4, 5");
+TEST_SUITE("test all resource helpers") {
+    std::string path;
+    const int expectedSize {5};
+    std::string expectedLine;
+
+    TEST_CASE("setup constant") {
+        path = "../../resources/fake-resource.txt";
+        expectedLine = "1, 2, 3, 4, 5";
     }
 
-    std::string resource = getTestString(path);
+    TEST_CASE("test getTestString()") {
+        std::string expected {};
+        for (int i {0}; i < 5; ++i) {
+            expected.append(expectedLine);
+        }
 
-    CHECK_EQ(expected, resource);
-}
+        std::string actual = getTestString(path);
 
-TEST_SUITE("test getTestResource()") {
-    TEST_CASE("with default retrieval") {
-        std::string_view path {"../../resources/fake-resource.txt"};
-        int expectedSize {5};
-        std::string expectedLine {"1, 2, 3, 4, 5"};
+        CHECK_EQ(expected, actual);
+    }
 
-        std::vector<std::string> resource = getTestResource(path);
+    TEST_SUITE("test getTestResource()") {
+        TEST_CASE("with default retrieval") {
+            const std::vector<std::string> actual = getTestResource(path);
 
-        CHECK_EQ(expectedSize, resource.size());
-        CHECK_EQ(typeid(std::string), typeid(resource[0]));
-        for (const std::string& line : resource) {
-            CHECK_EQ(expectedLine, line);
+            CHECK_EQ(expectedSize, actual.size());
+            CHECK_EQ(typeid(std::string), typeid(actual[0]));
+            for (const std::string& line : actual) {
+                CHECK_EQ(expectedLine, line);
+            }
+        }
+
+        TEST_CASE("with transformed retrieval") {
+            const std::vector<std::string> expectedVector {"1A", "2A", "3A", "4A", "5A"};
+
+            auto actual = getTestResource<std::string>(path,
+                                                       [](const std::string& s) {
+                                                           return s + 'A';
+                                                       },
+                                                       ", ");
+
+            CHECK_EQ(expectedSize, actual.size());
+            CHECK_EQ(typeid(std::vector<std::string>), typeid(actual[0]));
+            for (const auto& line : actual) {
+                CHECK_EQ(expectedVector, line);
+            }
         }
     }
 
-    TEST_CASE("with transformed retrieval") {
-        std::string_view path {"../../resources/fake-resource.txt"};
-        int expectedSize {5};
-        std::vector<std::string> expectedLine {"1A", "2A", "3A", "4A", "5A"};
-
-        auto resource = getTestResource<std::string>(
-                path,
-                [](const std::string& s) {
-                    return s + 'A';
-                },
-                ", ");
-
-        CHECK_EQ(expectedSize, resource.size());
-        CHECK_EQ(typeid(std::vector<std::string>), typeid(resource[0]));
-        for (const std::vector<std::string>& line : resource) {
-            CHECK_EQ(expectedLine, line);
-        }
-    }
-}
-
-TEST_SUITE("test getTestGrid()") {
-    TEST_CASE("when T is unsigned short") {
-        std::string_view path {"../../resources/fake-resource.txt"};
-        int expectedSize {5};
+    TEST_SUITE("test getTestGrid()") {
         unsigned short expectedFirst[] {1, 2, 3, 4, 5};
 
-        auto** grid = getTestGrid<unsigned short>(
-                path, expectedSize, ", "
-        );
+        TEST_CASE("when T is unsigned short") {
+            auto** grid = getTestGrid<unsigned short>(path,
+                                                      expectedSize, ", ");
 
-        CHECK_EQ(typeid(unsigned short *), typeid(grid[0]));
-        for (int i {0}; i < 5; ++i) {
-            CHECK_EQ(expectedFirst[i], grid[0][i]);
+            CHECK_EQ(typeid(unsigned short *), typeid(grid[0]));
+            for (int i {0}; i < 5; ++i) {
+                CHECK_EQ(expectedFirst[i], grid[0][i]);
+            }
         }
-    }
 
-    TEST_CASE("when T is unsigned long") {
-        std::string_view path {"../../resources/fake-resource.txt"};
-        int expectedSize {5};
-        unsigned long expectedFirst[] {1, 2, 3, 4, 5};
+        TEST_CASE("when T is unsigned long") {
+            auto** grid = getTestGrid<unsigned long>(path,
+                                                     expectedSize, ", ");
 
-        auto** grid = getTestGrid<unsigned long>(
-                path, expectedSize, ", "
-        );
-
-        CHECK_EQ(typeid(unsigned long *), typeid(grid[0]));
-        for (int i {0}; i < 5; ++i) {
-            CHECK_EQ(expectedFirst[i], grid[0][i]);
+            CHECK_EQ(typeid(unsigned long *), typeid(grid[0]));
+            for (int i {0}; i < 5; ++i) {
+                CHECK_EQ(expectedFirst[i], grid[0][i]);
+            }
         }
     }
 }

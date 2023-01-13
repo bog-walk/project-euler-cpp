@@ -39,8 +39,8 @@ unsigned long long sumSquareDiffBrute(unsigned short n)
     return sumOfRange * sumOfRange - sumOfSquares;
 }
 
-/**
- * The sum of the 1st [n] natural numbers (triangular numbers) is found using the gauss
+/*
+ * The sum of the 1st n natural numbers (triangular numbers) is found using the gauss
  * summation method.
  *
  * The sum of the sequence's squares is based on the assumption that:
@@ -53,12 +53,14 @@ unsigned long long sumSquareDiffBrute(unsigned short n)
  *      f(n) = (2n^3 + 3n^2 + n)/6
  *      f(n) = (n(2n + 1)(n + 1))/6
  */
-unsigned long long sumSquareDiff(unsigned short n) {
-    auto sumOfRange = gaussSum(n);
+unsigned long long sumSquareDiff(unsigned short n)
+{
+    unsigned long long sumOfRange = gaussSum(n);
 
-    auto sumOfSquares = n / 6.0 * (2 * n + 1) * (n + 1);
+    auto squareOfSum = static_cast<double>(sumOfRange * sumOfRange);
+    double sumOfSquares = n / 6.0 * (2 * n + 1) * (n + 1);
 
-    return sumOfRange * sumOfRange - static_cast<unsigned long long>(sumOfSquares);
+    return static_cast<unsigned long long>(squareOfSum - sumOfSquares);
 }
 
 TEST_CASE("test lower constraints") {
@@ -86,7 +88,7 @@ TEST_CASE("test mid constraints") {
 TEST_CASE("test upper constraints") {
     unsigned short nValues[] {2256, 7000, 10'000};
     unsigned long long expected[] {6'477'756'566'600, 600'307'154'415'500,
-                                               2'500'166'641'665'000};
+                                   2'500'166'641'665'000};
 
     for (const auto& n : nValues) {
         auto i = &n - &nValues[0];

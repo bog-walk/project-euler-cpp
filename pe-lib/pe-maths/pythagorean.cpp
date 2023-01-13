@@ -1,32 +1,21 @@
 #include "pythagorean.h"
 
-#include <numeric>
 #include <stdexcept>
 
 #include "../../doctest/doctest.h"
 
-/**
- * Two integers are co-prime (relatively/mutually prime) if the only positive integer
- * that is a divisor of both of them is 1.
- */
-bool isCoPrime(unsigned long x, unsigned long y)
-{
-    return std::gcd(x, y) == 1uL;
-}
-
-/**
- * Euclid's formula generates all Pythagorean triplets from 2 numbers, [m] and [n].
+/*
+ * Euclid's formula generates all Pythagorean triplets from 2 numbers, m and n.
  *
  * All triplets originate from a primitive one by multiplying them by d = gcd (a,b,c).
  *
- * @throws std::invalid_argument if arguments do not follow [m] > [n] > 0, or if both
+ * @throws std::invalid_argument if arguments do not follow m > n > 0, or if both
  * are odd, or if they are not co-prime, i.e. gcd(m, n) != 1.
  */
 triple pythagoreanTriplet(unsigned long m, unsigned long n, unsigned long d)
 {
     if (n < 1 || n >= m)
         throw std::invalid_argument("Positive integers assumed to be m > n > 0");
-    // C++ value 1 equates to true
     if (m % 2 && n % 2)
         throw std::invalid_argument("Both integers cannot be odd");
     if (!isCoPrime(m, n))
@@ -69,17 +58,15 @@ TEST_SUITE("test pythagoreanTriplet()") {
     const unsigned long d {1};
 
     TEST_CASE("denies invalid input") {
-        std::pair<unsigned long, unsigned long> args[] {
-                std::pair(1, 0), std::pair(1, 10),
-                std::pair(5, 3), std::pair(9, 3)
-        };
+        std::pair<unsigned long, unsigned long> args[] {{1, 0}, {1, 10}, {5,3},
+                                                        {9,3}};
 
         for (const auto& [m, n] : args) {
             CHECK_THROWS_AS(pythagoreanTriplet(m, n, d), std::invalid_argument);
         }
     }
 
-    TEST_CASE("correct for valid input") {
+    TEST_CASE("with valid input") {
         std::pair<unsigned long, unsigned long> args[] {{2, 1}, {3, 2}, {4, 1},
                                                         {4, 3}};
         triple expected[] {{3, 4, 5}, {5, 12, 13}, {8, 15, 17}, {7, 24, 25}};

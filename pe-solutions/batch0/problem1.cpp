@@ -20,8 +20,8 @@
 
 #include "pe-maths/gauss-sum.h"
 
-/**
- * Brute iteration through all numbers < [n] that checks for selector predicate.
+/*
+ * Brute iteration through all numbers < n that checks for selector predicate.
  */
 unsigned long long sumOfMultiplesBrute(unsigned long n, unsigned long factor1,
                                        unsigned long factor2)
@@ -29,13 +29,14 @@ unsigned long long sumOfMultiplesBrute(unsigned long n, unsigned long factor1,
     unsigned long long sum {};
 
     for (auto num = std::min(factor1, factor2); num < n; ++num) {
-        sum += !(num % factor1) || !(num % factor2) ? num : 0;
+        // bool values stored & evaluated as integers 0 and 1
+        sum += !(num % factor1) || !(num % factor2) ? num : 0uLL;
     }
 
     return sum;
 }
 
-/**
+/*
  * Calculates the sum of an arithmetic progression sequence.
  *
  * Solution based on the formula:
@@ -57,7 +58,7 @@ unsigned long long sumOfArithProgression(unsigned long maxTerm, unsigned long de
     return gaussSum(maxTerm / delta) * delta;
 }
 
-/**
+/*
  * Calculates the sum of multiples of both factors minus the sum of duplicates found
  * via the least common multiple of the given factors.
  */
@@ -83,8 +84,7 @@ TEST_CASE("test lower constraints for N") {
     for (const auto& n : nValues) {
         // use pointer arithmetic to get index
         auto i = &n - &nValues[0];
-        CHECK_EQ(expected[i], sumOfMultiplesBrute(n, k1Values[i],
-                                                  k2Values[i]));
+        CHECK_EQ(expected[i], sumOfMultiplesBrute(n, k1Values[i], k2Values[i]));
         CHECK_EQ(expected[i], sumOfMultiples(n, k1Values[i],k2Values[i]));
     }
 }
@@ -122,8 +122,7 @@ TEST_CASE("test upper constraints") {
     unsigned long k1Values[] {8, 20, 3, 3};
     unsigned long k2Values[] {21, 32, 5, 5};
     unsigned long long expected[] {44'087'172, 3'749'995'000'000,
-                                   23'333'331'666'668,
-                                   233'333'333'166'666'668};
+                                   23'333'331'666'668, 233'333'333'166'666'668};
 
     for (const auto& n : nValues) {
         auto i = &n - &nValues[0];

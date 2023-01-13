@@ -19,7 +19,7 @@
 
 #include "pe-maths/primes.h"
 
-/**
+/*
  * Repeatedly calculates the lcm of 2 values (via reduce()), starting from the largest
  * and stepping backwards until the middle of the range, as the smaller half of a range
  * will already be factors of the larger half.
@@ -40,7 +40,7 @@ unsigned long long lcmOfRange(unsigned short n)
             });
 }
 
-/**
+/*
  * Uses prime numbers to calculate the lcm of a range, based on the formula:
  *
  *      p_i^a_i <= n
@@ -65,7 +65,8 @@ unsigned long long lcmOfRangeUsingPrimes(unsigned short n)
             result *= prime;
         }
         else {
-            auto power = pow(prime, trunc(log2(n) / log2(prime)));
+            auto exp = std::trunc(std::log2(n) / std::log2(prime));
+            auto power = std::pow(prime, exp);
             result *= static_cast<unsigned long long>(power);
         }
     }

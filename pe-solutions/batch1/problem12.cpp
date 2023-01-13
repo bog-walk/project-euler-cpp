@@ -25,11 +25,12 @@
 
 #include "../../doctest/doctest.h"
 
+#include "pe-custom/extension.h"
 #include "pe-maths/gauss-sum.h"
 #include "pe-maths/primes.h"
 #include "pe-maths/prime-factors.h"
 
-/**
+/*
  * Counts unique divisors of n using prime decomposition.
  *
  * e.g. 28 = 2^2 * 7^1, therefore
@@ -39,50 +40,53 @@
 unsigned short countDivisors(unsigned short n)
 {
     const auto factors = primeFactors(n);
+    const std::vector<unsigned long> counts = getMapValues(factors);
 
     return std::accumulate(
-            factors.cbegin(),
-            factors.cend(),
+            counts.cbegin(),
+            counts.cend(),
             1,
-            [](unsigned short acc, std::pair<unsigned long long, unsigned long> pf) {
-                return acc * (pf.second + 1);
+            [](unsigned short acc, unsigned long exp) {
+                return acc * (exp + 1);
             });
 }
 
-/**
+/*
  * Returns the found triangle number generated as a Gaussian sum that has had its
  * divisors counted using prime decomposition.
  *
- * Since the components of a Gaussian sum (n & n+1) are co-prime (i.e. they can have
- * neither a common prime factor nor a common divisor), the amount of divisors can be
- * assessed based on the cycling formulae:
+ * Since the components of a Gaussian sum (limit & limit+1) are co-prime (i.e. they can
+ * have neither a common prime factor nor a common divisor), the amount of divisors can be
+ * assessed based on the cycling formulae using these smaller values:
  *
- *      t represents Gaussian sum = n(n + 1)/2
+ *      t represents Gaussian sum = limit(limit + 1)/2
  *
- *      (even n) D(t) = D(n/2) * D(n+1)
- *      D(n+1) becomes D(n) for the next number, which will be odd.
+ *      (even limit) D(t) = D(limit/2) * D(limit+1)
+ *      D(limit+1) becomes D(limit) for the next number, which will be odd.
  *
- *      (odd n) D(t) = D(n) * D((n+1)/2)
+ *      (odd limit) D(t) = D(limit) * D((limit+1)/2)
  */
-unsigned long firstTriangleOverNBrute(unsigned short n)
+unsigned long firstTriangleBrute(unsigned short limit)
 {
-    if (n == 1)
-        return 3uL;
+    if (limit == 1)
+        return 3;
 
-    // t = D(2) = D(1) * D(3)
+    // n = D(2) = D(1) * D(3)
     // dn1 = D(3) = 2
-    unsigned short t {2}, dn1 {2}, count {2};
-    while (count <= n) {
-        t++;
-        auto dn2 = t % 2 ? countDivisors((t + 1) / 2) : countDivisors(t + 1);
+    unsigned short n {2}, dn1 {2}, count {2};
+    bool isEven {true};
+    while (count <= limit) {
+        n++;
+        isEven = !isEven;
+        auto dn2 = isEven ? countDivisors(n + 1) : countDivisors((n + 1) / 2);
         count = dn1 * dn2;
         dn1 = dn2;
     }
 
-    return gaussSum(t);
+    return gaussSum(n);
 }
 
-/**
+/*
  * Stores cumulative divisor counts in an array for quick access instead of calculating
  * the count for every new n.
  *
@@ -93,7 +97,7 @@ unsigned long firstTriangleOverNBrute(unsigned short n)
  * maximum of the ratios of t:n. At n = 1000, the valid triangle number is the 41041st
  * term.
  */
-unsigned long firstTriangleOverN(unsigned short n)
+unsigned long firstTriangle(unsigned short n)
 {
     const auto nMax = std::min(n * 53, 41100);
     // cannot use array because variable-sized object cannot be initialised;
@@ -105,36 +109,35 @@ unsigned long firstTriangleOverN(unsigned short n)
 
     while (dT <= n) {
         num++;
-        for (int i = num; i < nMax; i += num) {
+        for (int i {num}; i < nMax; i += num) {
             divisorCount[i]++;
         }
-        if (num % 2) {
+        if (num & 1)
             dT = divisorCount[num] * divisorCount[(num-1)/2];
-        } else {
+        else
             dT = divisorCount[num/2] * divisorCount[num-1];
-        }
     }
 
     return num * (num - 1) / 2;
 }
 
-/**
+/*
  * Generates primes to count number of divisors based on prime factorisation.
  */
-unsigned long firstTriangleOverNUsingPrimes(unsigned short n)
+unsigned long firstTriangleUsingPrimes(unsigned short n)
 {
     if (n == 1)
         return 3;
 
     const auto primes = primeNumbers(n * 2);
-    unsigned long prime {3uL};
+    unsigned long prime {3};
 
     unsigned short dn {2};  // min num of divisors for any prime
     unsigned short count {};
     while (count <= n) {
         prime++;
         auto n1 = prime;
-        if (!(n1 % 2))
+        if (!(n1 & 1))
             n1 /= 2;
         unsigned short dn1 {1};
         for (auto& p : primes) {
@@ -162,7 +165,7 @@ unsigned long firstTriangleOverNUsingPrimes(unsigned short n)
     return prime * (prime - 1) / 2;
 }
 
-TEST_CASE("test countDivisors()") {
+TEST_CASE("test helper countDivisors()") {
     unsigned short nValues[] { 2, 3, 6, 28, 144, 3455, 10'000};
     unsigned short expected[] {2, 2, 4, 6, 15, 4, 25};
 
@@ -172,16 +175,16 @@ TEST_CASE("test countDivisors()") {
     }
 }
 
-TEST_SUITE("test firstTriangleOverN()") {
+TEST_SUITE("test firstTriangle()") {
     TEST_CASE("with lower constraints") {
         unsigned short nValues[] {1, 2, 4, 5, 12};
         unsigned long expected[] {3, 6, 28, 28, 120};
 
         for (const auto& n: nValues) {
             auto i = &n - &nValues[0];
-            CHECK_EQ(expected[i], firstTriangleOverNBrute(n));
-            CHECK_EQ(expected[i], firstTriangleOverN(n));
-            CHECK_EQ(expected[i], firstTriangleOverNUsingPrimes(n));
+            CHECK_EQ(expected[i], firstTriangleBrute(n));
+            CHECK_EQ(expected[i], firstTriangle(n));
+            CHECK_EQ(expected[i], firstTriangleUsingPrimes(n));
         }
     }
 
@@ -191,9 +194,9 @@ TEST_SUITE("test firstTriangleOverN()") {
 
         for (const auto& n: nValues) {
             auto i = &n - &nValues[0];
-            CHECK_EQ(expected[i], firstTriangleOverNBrute(n));
-            CHECK_EQ(expected[i], firstTriangleOverN(n));
-            CHECK_EQ(expected[i], firstTriangleOverNUsingPrimes(n));
+            CHECK_EQ(expected[i], firstTriangleBrute(n));
+            CHECK_EQ(expected[i], firstTriangle(n));
+            CHECK_EQ(expected[i], firstTriangleUsingPrimes(n));
         }
     }
 }

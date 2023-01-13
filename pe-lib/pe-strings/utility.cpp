@@ -1,36 +1,39 @@
 #include "utility.h"
 
+#include <numeric>
+
 #include "../../doctest/doctest.h"
 
-/**
- * Returns a std::string after the removal of leading and trailing characters matching
+/*
+ * @return string after the removal of leading and trailing characters matching
  * the provided argument.
  */
 std::string trim(std::string_view line, std::string_view characters)
 {
-    line.remove_prefix(
-            std::min(line.length(), line.find_first_not_of(characters)));
-    line.remove_suffix(
-            std::max(size_t {0},
-                     line.length() - 1 - line.find_last_not_of(characters)));
+    line.remove_prefix(std::min(line.length(),
+                                   line.find_first_not_of(characters)));
+    line.remove_suffix(std::max(std::size_t {0},
+                             line.length() - 1 - line.find_last_not_of(characters)));
 
     return std::string {line};
 }
 
-// Could have used stringStream getLine, but only takes single character delimiter
-/**
- * Splits the original std::string into a std::vector of std::string around occurrences
- * of the provided delimiter.
+/*
+ * Splits the original string into a vector of strings around occurrences of the
+ * provided delimiter.
+ *
+ * Could have used stringStream getLine(), but the latter only takes a single character
+ * delimiter.
  */
 std::vector<std::string> split(std::string_view line, std::string_view delimiter)
 {
-    // Could have used std::regex_token_iterator instead
-    size_t start;
-    size_t end {0};
+    // Could have used std::regex_token_iterator instead?
+    std::size_t start;
+    std::size_t end {0};
 
     std::vector<std::string> tokens;
-    // std::string::npos is the greatest possible value for element of type size_t
-    // indicates end of string/no match/ -1
+    // std::string::npos is the greatest possible value for element of type size_t.
+    // it indicates end of string/no match/-1.
     while ((start = line.find_first_not_of(delimiter, end)) != std::string::npos) {
         end = line.find(delimiter, start);
         auto token = line.substr(start, end - start);
@@ -40,12 +43,26 @@ std::vector<std::string> split(std::string_view line, std::string_view delimiter
     return tokens;
 }
 
+/*
+ * @return sum of all digits in string representation of a number.
+ */
+unsigned long digitSum(std::string_view number)
+{
+    return std::accumulate(
+            number.cbegin(),
+            number.cend(),
+            0uL,
+            [](unsigned long acc, const char& ch) {
+                return acc + (ch - '0');
+            });
+}
+
 TEST_SUITE("test trim()") {
     TEST_CASE("with default arg") {
         std::string_view line {"   This line has whitespace   \n"};
         std::string expected {"This line has whitespace"};
 
-        CHECK_EQ(expected, trim(line, " \n"));
+        CHECK_EQ(expected, trim(line));
     }
 
     TEST_CASE("with different arg") {
@@ -69,5 +86,34 @@ TEST_SUITE("test split()") {
         std::vector<std::string> expected {"1", "2", "3", "4", "5", "6"};
 
         CHECK_EQ(expected, split(line, ", "));
+    }
+}
+
+TEST_SUITE("test digitSum()") {
+    TEST_CASE("with single digit numbers") {
+        for (int i {0}; i < 10; ++i) {
+            CHECK_EQ(i, digitSum(std::to_string(i)));
+        }
+    }
+
+    TEST_CASE("with small numbers") {
+        std::string numbers[] {"10", "111", "999999", "5678"};
+        unsigned long expected[] {1, 3, 54, 26};
+
+        for (auto& number : numbers) {
+            auto i = &number - &numbers[0];
+            CHECK_EQ(expected[i], digitSum(number));
+        }
+    }
+
+    TEST_CASE("with large numbers") {
+        std::string numbers[] {"123456789", "5000000000000000000",
+                               "99999999999999999999", "12341234"};
+        unsigned long expected[] {45, 5, 180, 20};
+
+        for (auto& number : numbers) {
+            auto i = &number - &numbers[0];
+            CHECK_EQ(expected[i], digitSum(number));
+        }
     }
 }

@@ -18,7 +18,7 @@
 
 #include "pe-strings/palindrome.h"
 
-/**
+/*
  * Brute iteration through all products of 3-digit numbers while storing the largest
  * confirmed palindrome product so far.
  */
@@ -27,7 +27,7 @@ unsigned long largestPalindromeProductBrute(unsigned long n)
     unsigned long largest {};
 
     for (int x {101}; x <= 999; ++x) {
-        for (int y = x; y <= 999; ++y) {
+        for (int y {x}; y <= 999; ++y) {
             auto product = x * y;
             if (product >= n)
                 break;
@@ -39,7 +39,7 @@ unsigned long largestPalindromeProductBrute(unsigned long n)
     return largest;
 }
 
-/**
+/*
  * Brute iteration through all products of 3-digit numbers starting with the largest
  * numbers and terminating the inner loop early if product starts to get too small.
  */
@@ -63,7 +63,7 @@ unsigned long largestPalindromeProductBruteBackwards(unsigned long n)
     return largest;
 }
 
-/**
+/*
  * A palindrome of the product of two 3-digit integers can be at most 6-digits long &
  * one of the integers must have a factor of 11, based on the following algebra:
  *
@@ -77,7 +77,7 @@ unsigned long largestPalindromeProductBruteBackwards(unsigned long n)
  */
 unsigned long largestPalindromeProduct(unsigned long n)
 {
-    unsigned long largest;
+    unsigned long largest {};
 
     for (int x {990}; x >= 110; x -= 11) {
         for (int y {999}; y >= 101; --y) {
@@ -95,10 +95,10 @@ unsigned long largestPalindromeProduct(unsigned long n)
     return largest;
 }
 
-/**
+/*
  * Converts a 3-digit integer to a 6-digit palindrome.
  */
-unsigned long getPalindrome(unsigned long n)
+inline unsigned long getPalindrome(unsigned long n)
 {
     return n * 1000 + n % 10 * 100 + n / 10 % 10 * 10 + n / 100;
 }
@@ -117,14 +117,14 @@ bool is3DigProduct(unsigned long n)
     return false;
 }
 
-/**
- * Brute iteration through all palindromes less than [n] checks if each palindrome
+/*
+ * Brute iteration through all palindromes less than n checks if each palindrome
  * could be a valid product of two 3-digit numbers.
  */
 unsigned long largestPalindromeProductAlt(unsigned long n)
 {
     unsigned long num = n / 1000;
-    if (getPalindrome(n / 1000) > n)
+    if (getPalindrome(num) > n)
        num--;
 
     while (num > 101) {
@@ -134,7 +134,7 @@ unsigned long largestPalindromeProductAlt(unsigned long n)
         num--;
     }
 
-    return 101'101uL;
+    return 101'101;
 }
 
 TEST_CASE("test lower constraints") {

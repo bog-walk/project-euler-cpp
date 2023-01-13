@@ -4,9 +4,8 @@
 
 #include "../pe-custom/big-int.cpp"
 
-/**
- * Recursive solution allows the compiler to replace recursion with iteration for
- * optimum efficiency & the reduction of StackOverflowErrors.
+/*
+ * Recursive solution uses custom BigInt class to handle overflow.
  *
  * 13! overflows 32 bits and 21! overflows 64 bits and 59! produces a result that is
  * greater than 1e80 (postulated to be the number of particles in the universe).
@@ -15,7 +14,6 @@ BigInt factorial(unsigned long n, const BigInt& run)
 {
     if (n == 0)
         return BigInt::one();
-
     if (n == 1)
         return run;
 
@@ -24,7 +22,7 @@ BigInt factorial(unsigned long n, const BigInt& run)
 
 TEST_SUITE("test factorial()") {
     TEST_CASE("with lower constraints") {
-        BigInt expected[] {
+        const BigInt expected[] {
             BigInt {1uLL}, BigInt {1uLL}, BigInt {2uLL},
             BigInt {6uLL}, BigInt {24uLL}, BigInt {120uLL}};
 
@@ -35,7 +33,7 @@ TEST_SUITE("test factorial()") {
 
     TEST_CASE("with normal value") {
         unsigned long n {10};
-        BigInt expected {3'628'800uLL};
+        const BigInt expected {3'628'800uLL};
 
         CHECK_EQ(expected, factorial(n));
     }

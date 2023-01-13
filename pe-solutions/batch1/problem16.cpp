@@ -14,17 +14,19 @@
 
 #include "../../doctest/doctest.h"
 
-#include <numeric>
-
 #include "pe-custom/big-int.h"
+#include "pe-strings/utility.h"
 
+/*
+ * This solution does not handle N > 1e3 well.
+ */
 unsigned long expDigSumIterative(unsigned long n)
 {
     BigInt power = BigInt {2uLL}.pow(BigInt {n});
-    BigInt ten = BigInt::ten();
-
+    const BigInt ten = BigInt::ten(), zero = BigInt::zero();
     unsigned long total {};
-    while (power != BigInt::zero()) {
+
+    while (power != zero) {
         total += (power % ten).toULong();
         power /= ten;
     }
@@ -34,15 +36,9 @@ unsigned long expDigSumIterative(unsigned long n)
 
 unsigned long expDigSum(unsigned long n)
 {
-    auto number = BigInt {2uLL}.pow(BigInt {n}).toString();
+    const auto number = BigInt {2uLL}.pow(BigInt {n}).toString();
 
-    return std::accumulate(
-            number.cbegin(),
-            number.cend(),
-            0uL,
-            [](unsigned long acc, const char& ch) {
-                return acc + (ch - '0');
-            });
+    return digitSum(number);
 }
 
 TEST_CASE("test lower constraints") {
@@ -73,7 +69,6 @@ TEST_CASE("test upper constraints") {
 
     for (const auto& n: nValues) {
         auto i = &n - &nValues[0];
-        CHECK_EQ(expected[i], expDigSumIterative(n));
         CHECK_EQ(expected[i], expDigSum(n));
     }
 }
