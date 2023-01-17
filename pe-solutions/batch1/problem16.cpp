@@ -38,7 +38,7 @@ unsigned long expDigSum(unsigned long n)
 {
     const auto number = BigInt {2uLL}.pow(BigInt {n}).toString();
 
-    return digitSum(number);
+    return characterSum(number);
 }
 
 TEST_CASE("test lower constraints") {

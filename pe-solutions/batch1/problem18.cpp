@@ -56,7 +56,7 @@ unsigned long maxPathSumPyramid(unsigned short rows, size_t len,
  * Converts a 1D array of elements into a 2D array pyramid (consecutive nested arrays
  * have 1 more element than the previous array).
  */
-unsigned short **getNestedPyramid(unsigned short rows, const unsigned short *elements)
+unsigned short** getNestedPyramid(unsigned short rows, const unsigned short* elements)
 {
     auto* pyramid = new unsigned short*[rows];
     int start {};
@@ -83,6 +83,8 @@ TEST_CASE("test with small tree") {
 
     CHECK_EQ(expected, maxPathSum(n, pyramid));
     CHECK_EQ(expected, maxPathSumPyramid(n, std::size(elements), elements));
+
+    delete[] pyramid;
 }
 
 TEST_CASE("test with large tree") {
@@ -110,4 +112,6 @@ TEST_CASE("test with large tree") {
 
     CHECK_EQ(expected, maxPathSum(n, pyramid));
     CHECK_EQ(expected, maxPathSumPyramid(n, std::size(elements), elements));
+
+    delete[] pyramid;
 }

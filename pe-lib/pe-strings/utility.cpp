@@ -25,7 +25,8 @@ std::string trim(std::string_view line, std::string_view characters)
  * Could have used stringStream getLine(), but the latter only takes a single character
  * delimiter.
  */
-std::vector<std::string> split(std::string_view line, std::string_view delimiter)
+std::vector<std::string> split(std::string_view line,
+                               std::string_view delimiter)
 {
     // Could have used std::regex_token_iterator instead?
     std::size_t start;
@@ -44,16 +45,20 @@ std::vector<std::string> split(std::string_view line, std::string_view delimiter
 }
 
 /*
- * @return sum of all digits in string representation of a number.
+ * Default use results in the sum of all digits in a string representation of a str.
+ *
+ * @param [normaliser] character that will determine decimal value of each character in
+ * string.
+ * @return sum of decimal representation of characters in a string.
  */
-unsigned long digitSum(std::string_view number)
+unsigned long characterSum(std::string_view str, char normaliser)
 {
     return std::accumulate(
-            number.cbegin(),
-            number.cend(),
+            str.cbegin(),
+            str.cend(),
             0uL,
-            [](unsigned long acc, const char& ch) {
-                return acc + (ch - '0');
+            [&normaliser](unsigned long acc, const char& ch) {
+                return acc + (ch - normaliser);
             });
 }
 
@@ -89,10 +94,10 @@ TEST_SUITE("test split()") {
     }
 }
 
-TEST_SUITE("test digitSum()") {
+TEST_SUITE("test characterSum()") {
     TEST_CASE("with single digit numbers") {
         for (int i {0}; i < 10; ++i) {
-            CHECK_EQ(i, digitSum(std::to_string(i)));
+            CHECK_EQ(i, characterSum(std::to_string(i)));
         }
     }
 
@@ -102,7 +107,7 @@ TEST_SUITE("test digitSum()") {
 
         for (auto& number : numbers) {
             auto i = &number - &numbers[0];
-            CHECK_EQ(expected[i], digitSum(number));
+            CHECK_EQ(expected[i], characterSum(number));
         }
     }
 
@@ -113,7 +118,18 @@ TEST_SUITE("test digitSum()") {
 
         for (auto& number : numbers) {
             auto i = &number - &numbers[0];
-            CHECK_EQ(expected[i], digitSum(number));
+            CHECK_EQ(expected[i], characterSum(number));
+        }
+    }
+
+    TEST_CASE("with non-number strings") {
+        const char allCaps {'@'};
+        std::string names[] {"PAMELA", "COLIN", "A", "ZZZZZZZZZZ"};
+        unsigned long expected[] {48, 53, 1, 260};
+
+        for (auto& name : names) {
+            auto i = &name - &names[0];
+            CHECK_EQ(expected[i], characterSum(name, allCaps));
         }
     }
 }

@@ -21,7 +21,7 @@ unsigned long factorialDigitSum(unsigned short n)
 {
     auto result = factorial(n).toString();
 
-    return digitSum(result);
+    return characterSum(result);
 }
 
 TEST_CASE("test lower constraints") {

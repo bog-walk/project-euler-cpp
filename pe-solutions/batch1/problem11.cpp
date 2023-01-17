@@ -89,6 +89,8 @@ TEST_SUITE("test largestProductInGrid()") {
         unsigned long expected {6};
 
         CHECK_EQ(expected, largestProductInGrid(n, grid));
+
+        delete[] grid;
     }
 
     TEST_CASE("with medium grid") {
@@ -98,6 +100,8 @@ TEST_SUITE("test largestProductInGrid()") {
         unsigned long expected {15};
 
         CHECK_EQ(expected, largestProductInGrid(n, grid));
+
+        delete[] grid;
     }
 
     TEST_CASE("with large grid") {
@@ -112,5 +116,7 @@ TEST_SUITE("test largestProductInGrid()") {
         CHECK_EQ(72, grid[15][7]);
 
         CHECK_EQ(expected, largestProductInGrid(n, grid));
+
+        delete[] grid;
     }
 }

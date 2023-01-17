@@ -3,16 +3,55 @@
 
 #include <fstream>
 #include <functional>
-#include <string_view>
-#include <vector>
 
-#include "../pe-strings/utility.h"
+#include "../pe-strings/utility.cpp"
 
+/*
+ * Retrieves content of a test resource file as a single std::string.
+ *
+ * @param lineTrim characters to remove from the left and right of each file line.
+ */
 std::string getTestString(const std::string& filePath,
-                          std::string_view lineTrim = " \n");
+                          std::string_view lineTrim = " \n")
+{
+    std::string resource;
+    std::ifstream resFile(filePath);
 
+    if (resFile.is_open()) {
+        std::string line {};
+        while (std::getline(resFile, line)) {
+            // technically, end-of-line is extracted but not stored by getline()
+            // so no need to trim '\n'?
+            resource.append(trim(line, lineTrim));
+        }
+        resFile.close();
+    }
+
+    return resource;
+}
+
+/*
+ * Retrieves content of a test resource file, with each line returned as a trimmed, but
+ * otherwise unaltered std::string.
+ *
+ * @param lineTrim characters to remove from the left and right of each file line.
+ */
 std::vector<std::string> getTestResource(const std::string& filePath,
-                                         std::string_view lineTrim = " \n");
+                                         const std::string_view lineTrim = " \n")
+{
+    std::vector<std::string> resource;
+    std::ifstream resFile(filePath);
+
+    if (resFile.is_open()) {
+        std::string line {};
+        while (std::getline(resFile, line)) {
+            resource.push_back(trim(line, lineTrim));
+        }
+        resFile.close();
+    }
+
+    return resource;
+}
 
 /*
  * Retrieves content of a test resource file, with each line transformed into a nested

@@ -99,6 +99,8 @@ public:
         return result;
     }
 
+    std::size_t length() const { return m_digits.size(); }
+
     std::string toString() const
     {
         return std::string {m_digits.rbegin(), m_digits.rend()};
@@ -115,7 +117,6 @@ public:
 
 protected:
     std::vector<unsigned char> m_digits;
-    std::size_t length() const { return m_digits.size(); }
 };
 
 #endif //PROJECT_EULER_CPP_BIG_INT_H

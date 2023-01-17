@@ -159,4 +159,8 @@ TEST_SUITE("test latticePath()") {
             CHECK_EQ(expected[i], lattice[n][mValues[i]]);
         }
     }
+
+    TEST_CASE("breakdown BFS lattice") {
+        delete[] lattice;
+    }
 }

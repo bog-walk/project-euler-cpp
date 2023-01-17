@@ -5,7 +5,7 @@
 
 #include "../../doctest/doctest.h"
 
-bool isPalindromeBuiltIn(std::string_view s)
+bool isPalindromeBuiltIn(const std::string_view s)
 {
     std::string rev {s};
     std::reverse(rev.begin(), rev.end());
@@ -13,7 +13,7 @@ bool isPalindromeBuiltIn(std::string_view s)
     return s == rev;
 }
 
-bool isPalindromeConstructor(std::string_view s)
+bool isPalindromeConstructor(const std::string_view s)
 {
     std::string rev {s.rbegin(), s.rend()};
 
@@ -33,7 +33,7 @@ bool isPalindromeRecursive(std::string_view s)
     return isPalindromeRecursive(s);
 }
 
-bool isPalindrome(std::string_view s)
+bool isPalindrome(const std::string_view s)
 {
     const auto sLen = s.length();
 

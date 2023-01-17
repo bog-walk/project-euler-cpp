@@ -10,6 +10,7 @@ set(SOURCE_FILES
         pe-maths/prime-factors.cpp
         pe-maths/primes.cpp
         pe-maths/pythagorean.cpp
+        pe-maths/sum-proper-divisors.cpp
         pe-strings/palindrome.cpp
         pe-strings/utility.cpp
         pe-tests/get-test-resource.cpp
@@ -27,6 +28,7 @@ set(HEADER_FILES
         pe-maths/prime-factors.h
         pe-maths/primes.h
         pe-maths/pythagorean.cpp
+        pe-maths/sum-proper-divisors.h
         pe-strings/palindrome.h
         pe-strings/utility.h
         pe-tests/get-test-resource.h
