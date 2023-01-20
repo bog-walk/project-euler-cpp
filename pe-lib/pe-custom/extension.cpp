@@ -38,7 +38,7 @@ TEST_SUITE("test getMap() functions") {
         std::generate_n(
                 expected.begin(),
                 exampleMax,
-                [&i]() {
+                [&i] {
                     return 1.1 * i++;
                 });
 

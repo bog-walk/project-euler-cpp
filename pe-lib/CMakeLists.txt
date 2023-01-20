@@ -1,5 +1,6 @@
 set(SOURCE_FILES
         pe-combinatorics/binomial-coeff.cpp
+        pe-combinatorics/combinations-with-repl.cpp
         pe-custom/big-int.cpp
         pe-custom/extension.cpp
         pe-custom/pyramid-tree.cpp
@@ -18,6 +19,7 @@ set(SOURCE_FILES
 
 set(HEADER_FILES
         pe-combinatorics/binomial-coeff.h
+        pe-combinatorics/combinations-with-repl.h
         pe-custom/big-int.h
         pe-custom/extension.h
         pe-custom/pyramid-tree.h

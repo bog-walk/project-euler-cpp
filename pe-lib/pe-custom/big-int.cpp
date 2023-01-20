@@ -316,7 +316,7 @@ TEST_SUITE("test BigInt") {
     }
 
     TEST_CASE("conversion when zero") {
-        const BigInt zero = BigInt::zero();
+        const BigInt zero {BigInt::zero()};
         unsigned long expectedL {0uL};
         unsigned long long expectedLL {0uLL};
 
@@ -382,7 +382,7 @@ TEST_SUITE("test BigInt") {
     }
 
     TEST_CASE("invalid decrement") {
-        BigInt a = BigInt::zero();
+        BigInt a {BigInt::zero()};
 
         CHECK_THROWS_AS(--a, std::runtime_error);
     }
@@ -469,7 +469,7 @@ TEST_SUITE("test BigInt") {
     }
 
     TEST_CASE("multiplication when a = 0") {
-        const BigInt a = BigInt::zero();
+        const BigInt a {BigInt::zero()};
         const BigInt b {"100"};
 
         CHECK_EQ(a, a * b);
@@ -494,7 +494,7 @@ TEST_SUITE("test BigInt") {
 
     TEST_CASE("division when b = 0") {
         const BigInt a {"123456"};
-        const BigInt b = BigInt::zero();
+        const BigInt b {BigInt::zero()};
 
         CHECK_THROWS_AS(a / b, std::runtime_error);
     }
@@ -533,7 +533,7 @@ TEST_SUITE("test BigInt") {
 
     TEST_CASE("modulo when b = 0") {
         const BigInt a {"123456"};
-        const BigInt b = BigInt::zero();
+        const BigInt b {BigInt::zero()};
 
         CHECK_THROWS_AS(a % b, std::runtime_error);
     }
@@ -541,7 +541,7 @@ TEST_SUITE("test BigInt") {
     TEST_CASE("modulo when a = b or b = 1") {
         const BigInt a {"1234"};
         const BigInt b {"1234"};
-        const BigInt c = BigInt::one();
+        const BigInt c {BigInt::one()};
 
         CHECK_EQ(BigInt::zero(), a % b);
         CHECK_EQ(BigInt::zero(), a % c);
@@ -573,14 +573,14 @@ TEST_SUITE("test BigInt") {
 
     TEST_CASE("pow() when exp = 0") {
         const BigInt a {"1000"};
-        const BigInt b = BigInt::zero();
+        const BigInt b {BigInt::zero()};
 
         CHECK_EQ(BigInt::one(), a.pow(b));
     }
 
     TEST_CASE("pow() when exp = 1") {
         const BigInt a {"1000"};
-        const BigInt b = BigInt::one();
+        const BigInt b {BigInt::one()};
 
         CHECK_EQ(a, a.pow(b));
     }
@@ -591,5 +591,55 @@ TEST_SUITE("test BigInt") {
         const std::string expected {"8"};
 
         CHECK_EQ(expected, a.pow(b).toString());
+    }
+
+    TEST_CASE("modPow() when exp = 0") {
+        const BigInt base {"999"};
+        const BigInt exp {BigInt::zero()};
+        const BigInt mod {"1000"};
+
+        CHECK_EQ(BigInt::one(), base.modPow(exp, mod));
+    }
+
+    TEST_CASE("modPow() when exp = 1") {
+        const BigInt base {"999"};
+        const BigInt exp = BigInt::one();
+        const BigInt mod {"1000"};
+
+        CHECK_EQ(base, base.modPow(exp, mod));
+    }
+
+    TEST_CASE("modPow() when mod = 0") {
+        const BigInt base {"999"};
+        const BigInt exp {"2"};
+        const BigInt mod {BigInt::zero()};
+
+        CHECK_THROWS_AS(base.modPow(exp, mod), std::runtime_error);
+    }
+
+    TEST_CASE("modPow() when exp > 1") {
+        const BigInt base {"123"};
+        BigInt exp {"2"};
+        const BigInt mod {"100"};
+        const std::string expectedA {"29"};
+        const std::string expectedB {"43"};
+
+        CHECK_EQ(expectedA, base.modPow(exp, mod).toString());
+
+        exp = BigInt {"5"};
+        CHECK_EQ(expectedB, base.modPow(exp, mod).toString());
+    }
+
+    TEST_CASE("modPow() when mod < base or a divisor") {
+        BigInt base {"123"};
+        const BigInt exp {"5"};
+        const BigInt mod {"10"};
+        const std::string expectedA {"3"};
+        const std::string expectedB {"0"};
+
+        CHECK_EQ(expectedA, base.modPow(exp, mod).toString());
+
+        base = BigInt {"120"};
+        CHECK_EQ(expectedB, base.modPow(exp, mod).toString());
     }
 }

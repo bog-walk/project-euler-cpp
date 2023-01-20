@@ -23,7 +23,7 @@ public:
             m_digits.push_back(value[i]);
         }
     }
-    explicit BigInt(const char *value)  {
+    explicit BigInt(const char* value)  {
         m_digits.reserve(strlen(value));
         for (std::size_t i = strlen(value); i--;) {
             if (!isdigit(value[i]))
@@ -85,6 +85,36 @@ public:
             if (exponent.m_digits[0] - '0' & 1)
                 result *= base;
             base *= base;
+            int add {};
+            for (int i = exponent.length() - 1; i >= 0; --i) {
+                auto digit = ((exponent.m_digits[i] - '0') >> 1) + add;
+                add = (exponent.m_digits[i] - '0' & 1) * 5;
+                exponent.m_digits[i] = digit + '0';
+            }
+            while (exponent.length() > 1 && !(exponent.m_digits.back() - '0')) {
+                exponent.m_digits.pop_back();
+            }
+        }
+
+        return result;
+    }
+    BigInt modPow(const BigInt& exp, const BigInt& mod) const
+    {
+        if (exp == BigInt::zero())
+            return BigInt::one() % mod;
+        if (exp == BigInt::one())
+            return *this % mod;
+
+        BigInt base {*this}, exponent {exp}, result {1uLL};
+        // no need to invoke pow() block if base is evenly divisible by mod
+        base %= mod;
+        if (base == BigInt::zero())
+            return base;
+
+        while (!(exponent.length() == 1 && exponent.m_digits[0] == '0')) {
+            if (exponent.m_digits[0] - '0' & 1)
+                result = result * base % mod;
+            base = base * base % mod;
             int add {};
             for (int i = exponent.length() - 1; i >= 0; --i) {
                 auto digit = ((exponent.m_digits[i] - '0') >> 1) + add;
