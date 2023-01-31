@@ -40,6 +40,9 @@ public:
     BigInt(const BigInt& rhs) {
         m_digits = rhs.m_digits;
     }
+    BigInt() {
+        m_digits.push_back('0');
+    }
 
     // way to create global namespace constants?
     static BigInt zero() { return BigInt {0uLL}; }

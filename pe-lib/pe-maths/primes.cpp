@@ -16,16 +16,16 @@ std::vector<unsigned long> primeNumbers(unsigned long n)
     if (n < 2)
         return {};
 
-    const auto oddSieve = n >> 1;
+    const auto oddSieve = (n - 1) >> 1;
     // create mask representing [2, 3..n step 2]
     // see links above for issues with std::vector<bool>
-    std::vector<bool> boolMask(oddSieve, true);
+    std::vector<bool> boolMask(oddSieve + 1, true);
     // boolMask[0] corresponds to prime 2 and is skipped
-    for (int i {1}; i * i <= n; ++i) {
+    for (int i {1}; 4 * i * i <= n; ++i) {
         if (boolMask[i]) {
             // j = next index at which multiple of odd prime exists
             auto j = 2 * i * (i + 1);
-            while (j < oddSieve) {
+            while (j <= oddSieve) {
                 boolMask[j] = false;
                 j += 2 * i + 1;
             }
@@ -34,7 +34,7 @@ std::vector<unsigned long> primeNumbers(unsigned long n)
 
     std::vector<unsigned long> primes {2};
 
-    for (int i {1}; i < oddSieve; ++i) {
+    for (int i {1}; i <= oddSieve; ++i) {
         if (boolMask[i])
             primes.push_back(2 * i + 1);
     }
@@ -53,6 +53,19 @@ TEST_SUITE("test primeNumbers()") {
         unsigned long n {30};
         std::vector<unsigned long> expected {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
 
+        CHECK_EQ(expected, primeNumbers(n));
+    }
+
+    TEST_CASE("with N as a prime & N + 1") {
+        unsigned long n {199};
+        std::vector<unsigned long> expected {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,
+                                             37, 41, 43, 47, 53, 59, 61, 67, 71, 73,
+                                             79, 83, 89, 97, 101, 103, 107, 109, 113,
+                                             127, 131, 137, 139, 149, 151, 157, 163, 167,
+                                             173, 179, 181, 191, 193, 197, 199};
+
+        CHECK_EQ(expected, primeNumbers(n));
+        n++;
         CHECK_EQ(expected, primeNumbers(n));
     }
 

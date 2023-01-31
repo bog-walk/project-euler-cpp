@@ -1,6 +1,8 @@
 set(SOURCE_FILES
         pe-combinatorics/binomial-coeff.cpp
+        pe-combinatorics/combinations.cpp
         pe-combinatorics/combinations-with-repl.cpp
+        pe-combinatorics/cartesian-product.cpp
         pe-custom/big-int.cpp
         pe-custom/extension.cpp
         pe-custom/pyramid-tree.cpp
@@ -12,6 +14,7 @@ set(SOURCE_FILES
         pe-maths/primes.cpp
         pe-maths/pythagorean.cpp
         pe-maths/sum-proper-divisors.cpp
+        pe-strings/is-pandigital.cpp
         pe-strings/palindrome.cpp
         pe-strings/utility.cpp
         pe-tests/get-test-resource.cpp
@@ -19,7 +22,9 @@ set(SOURCE_FILES
 
 set(HEADER_FILES
         pe-combinatorics/binomial-coeff.h
+        pe-combinatorics/combinations.h
         pe-combinatorics/combinations-with-repl.h
+        pe-combinatorics/cartesian-product.h
         pe-custom/big-int.h
         pe-custom/extension.h
         pe-custom/pyramid-tree.h
@@ -31,6 +36,7 @@ set(HEADER_FILES
         pe-maths/primes.h
         pe-maths/pythagorean.cpp
         pe-maths/sum-proper-divisors.h
+        pe-strings/is-pandigital.h
         pe-strings/palindrome.h
         pe-strings/utility.h
         pe-tests/get-test-resource.h

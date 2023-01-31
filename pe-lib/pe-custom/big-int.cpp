@@ -303,16 +303,19 @@ TEST_SUITE("test BigInt") {
     TEST_CASE("conversion to smaller numbers") {
         unsigned long num1 {1'234'567'890};
         unsigned long long num2 {123'456'789'012'345};
+        unsigned long num3 {296'710'490};
         const BigInt ul {1uLL * num1};
         const BigInt ull {num2};
-        const BigInt bi {"123456789012345678901234567890"};
+        const BigInt bi1 {"123456789012345678901234567890"};
+        const BigInt bi2 {"296710490"};
 
         CHECK_EQ(num1, ul.toULong());
         CHECK_EQ(num1, ul.toULLong());
         CHECK_EQ(num2, ull.toULLong());
+        CHECK_EQ(num3, bi2.toULong());
 
         CHECK_THROWS_AS(ull.toULong(), std::out_of_range);
-        CHECK_THROWS_AS(bi.toULLong(), std::out_of_range);
+        CHECK_THROWS_AS(bi1.toULLong(), std::out_of_range);
     }
 
     TEST_CASE("conversion when zero") {
@@ -552,6 +555,14 @@ TEST_SUITE("test BigInt") {
         const BigInt b {"1234"};
 
         CHECK_EQ(a, a % b);
+    }
+
+    TEST_CASE("modulo when a > b") {
+        const BigInt a {"1133873304647601"};
+        const BigInt b {"1000000007"};
+        const BigInt expected {"296710490"};
+
+        CHECK_EQ(expected, a % b);
     }
 
     TEST_CASE("modulo assignment when evenly divisible") {
