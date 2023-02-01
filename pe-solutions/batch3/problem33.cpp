@@ -35,8 +35,8 @@
  */
 bool isReducedEquivalent(int digits, int numerator, int denominator, int toCancel)
 {
-    const int nMod = static_cast<int>(pow(10, toCancel));
-    const int dMod = static_cast<int>(pow(10, digits - toCancel));
+    const int nMod = static_cast<int>(std::pow(10.0, toCancel));
+    const int dMod = static_cast<int>(std::pow(10.0, digits - toCancel));
     if (numerator % nMod == denominator / dMod) {
         auto ogFraction = 1.0 * numerator / denominator;
         auto reduced = 1.0 * (numerator / nMod) / (denominator % dMod);
@@ -56,8 +56,8 @@ std::vector<std::pair<int, int>> findNonTrivialsBrute(int n, int k = 1)
 {
     std::vector<std::pair<int, int>> nonTrivials;
 
-    const int minN = static_cast<int>(pow(10, n - 1) + 1);
-    const int maxD = static_cast<int>(pow(10, n));
+    const int minN = static_cast<int>(std::pow(10.0, n - 1) + 1);
+    const int maxD = static_cast<int>(std::pow(10.0, n));
     for (int num {minN}; num < maxD / 2; ++num) {
         for (int denom = num + 1; denom < maxD; ++denom) {
             if (!(denom % 10))
@@ -112,10 +112,10 @@ std::vector<std::pair<int, int>> findNonTrivials(int n, int k = 1)
 {
     std::vector<std::pair<int, int>> nonTrivials;
 
-    const int cancelledMin = static_cast<int>(pow(10, k - 1));
-    const int cancelledMax = static_cast<int>(pow(10, k));
-    const int reducedMin = static_cast<int>(pow(10, n - k - 1));
-    const int reducedMax = static_cast<int>(pow(10, n - k));
+    const int cancelledMin = static_cast<int>(std::pow(10.0, k - 1));
+    const int cancelledMax = static_cast<int>(std::pow(10.0, k));
+    const int reducedMin = static_cast<int>(std::pow(10.0, n - k - 1));
+    const int reducedMax = static_cast<int>(std::pow(10.0, n - k));
     for (int cancelled {cancelledMin}; cancelled < cancelledMax; ++cancelled) {
         for (int d2 = reducedMin + 1; d2 < reducedMax; ++d2) {
             for (int n2 {reducedMin}; n2 < d2; ++n2) {
@@ -213,8 +213,8 @@ std::set<int> getCancelledCombos(std::string num, std::vector<char>& combo)
 std::pair<int, int> sumOfNonTrivialsBrute(int n, int k)
 {
     int nSum {}, dSum {};
-    const int minNumerator = static_cast<int>(pow(10, n - 1) + 2);
-    const int maxDenominator = static_cast<int>(pow(10, n));
+    const int minNumerator = static_cast<int>(std::pow(10.0, n - 1) + 2);
+    const int maxDenominator = static_cast<int>(std::pow(10.0, n));
 
     for (int numerator {minNumerator}; numerator <= maxDenominator - 2; ++numerator) {
         const std::string nS = std::to_string(numerator);
@@ -278,9 +278,9 @@ std::pair<int, int> sumOfNonTrivialsBrute(int n, int k)
 std::pair<int, int> sumOfNonTrivialsGCD(int n, int k)
 {
     int nSum {}, dSum {};
-    const auto minNumerator = static_cast<int>(pow(10, n - 1));
-    const auto maxDenominator = static_cast<int>(pow(10, n));
-    const auto maxReduced = static_cast<int>(pow(10, n - k));
+    const auto minNumerator = static_cast<int>(std::pow(10.0, n - 1));
+    const auto maxDenominator = static_cast<int>(std::pow(10.0, n));
+    const auto maxReduced = static_cast<int>(std::pow(10.0, n - k));
 
     for (int numer {minNumerator}; numer <= maxDenominator - 2; ++numer) {
         const std::string nS = std::to_string(numer);

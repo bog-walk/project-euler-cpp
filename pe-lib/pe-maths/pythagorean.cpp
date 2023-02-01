@@ -16,7 +16,7 @@ triple pythagoreanTriplet(unsigned long m, unsigned long n, unsigned long d)
 {
     if (n < 1 || n >= m)
         throw std::invalid_argument("Positive integers assumed to be m > n > 0");
-    if (m % 2 && n % 2)
+    if (m & 1 && n & 1)
         throw std::invalid_argument("Both integers cannot be odd");
     if (!isCoPrime(m, n))
         throw std::invalid_argument("Positive integers must be co-prime");

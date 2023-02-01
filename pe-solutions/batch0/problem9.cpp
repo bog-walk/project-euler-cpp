@@ -26,7 +26,8 @@
 
 inline int product(const triple& triplet)
 {
-    auto p = std::get<0>(triplet) * std::get<1>(triplet) * std::get<2>(triplet);
+    auto [a, b, c] = triplet;
+    auto p = a * b * c;
 
     return static_cast<int>(p);
 }
